@@ -9,6 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Landing/>} />
+        <Route path="/chor.io" element={<Landing/>} />
         <Route path="/routineHome" element={<RoutineHome/>} />
       </Routes>
     </Router>
