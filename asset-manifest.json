@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/chor.io/static/css/main.f855e6bc.css",
-    "main.js": "/chor.io/static/js/main.4155b446.js",
+    "main.js": "/chor.io/static/js/main.d31f00a5.js",
     "static/js/453.784fa1cd.chunk.js": "/chor.io/static/js/453.784fa1cd.chunk.js",
     "index.html": "/chor.io/index.html",
     "main.f855e6bc.css.map": "/chor.io/static/css/main.f855e6bc.css.map",
-    "main.4155b446.js.map": "/chor.io/static/js/main.4155b446.js.map",
+    "main.d31f00a5.js.map": "/chor.io/static/js/main.d31f00a5.js.map",
     "453.784fa1cd.chunk.js.map": "/chor.io/static/js/453.784fa1cd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.4155b446.js"
+    "static/js/main.d31f00a5.js"
   ]
 }
