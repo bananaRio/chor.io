@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function Settings() {
+function Settings(props) {
     const [routine, setRoutine] = useState({
         routineName: "",
         music_source_path: "",
@@ -13,6 +13,7 @@ function Settings() {
     const [bgMode, setBgMode] = useState("dark");
 
     const navigate = useNavigate();
+    const loc = useLocation()
 
     useEffect(() => {
         const storedJson = sessionStorage.getItem("uploadedJson");
@@ -57,11 +58,20 @@ function Settings() {
         sessionStorage.setItem("uploadedJson", JSON.stringify(routine));
         navigate("/Overview");
     };
+    
+    const handleBack = () => {
+        alert("You have not saved");
+        const prev = loc.state.new ? "/" : "/Overview";
+        navigate(prev);
+    }
 
     return (
         <div style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
                 {/* Left Pane - Routine Settings */}
+                <button className="botContentButton" type="button" onClick={handleBack}>
+                    Back
+                </button>
                 <div style={{ width: "45%" }}>
                     <h2>Routine Settings</h2>
                     <label>Routine Name: </label>
@@ -103,6 +113,7 @@ function Settings() {
 
             {/* Save & Proceed Button */}
             <br />
+
             <button className="botContentButton" type="button" onClick={handleSaveAndProceed}>
                 Save & Proceed to Overview
             </button>

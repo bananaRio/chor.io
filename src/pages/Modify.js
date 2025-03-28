@@ -1,19 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Modify(){
+    const navigate = useNavigate();
+    const handleBack = () => {
+        alert("You have not saved");
+        navigate("/Overview");
+    }
+    const handleSave = () => {
+        navigate("/Overview");
+    }
     return(
         <div>
             <h1>Modify</h1>
-            <button className="botContentButton" type="button">
-                <Link to="/Overview" style={{ color: "black", textDecoration: "none" }}>
-                    back
-                </Link>
+            <button className="botContentButton" type="button" onClick={handleBack}>
+                back
             </button>
-            <button className="botContentButton" type="button">
-                <Link to="/Overview" style={{ color: "black", textDecoration: "none" }}>
-                    Save
-                </Link>
+            <button className="botContentButton" type="button" onClick={handleSave}>
+                Save
             </button>
         </div>
     );
