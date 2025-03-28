@@ -3,7 +3,7 @@ import Landing from "./pages/Landing";
 import Settings from "./pages/Settings";
 import Modify from "./pages/Modify";
 import Review from "./pages/Review";
-import RoutineHome from "./pages/routineHome";
+import Overview from "./pages/Overview";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -12,11 +12,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Landing/>} />
-        <Route path="/Settings" element={<Settings/>} />
+        <Route path="/chor.io" element={<Landing/>} />
         <Route path="/Modify" element={<Modify/>} />
         <Route path="/Review" element={<Review/>} />
-        <Route path="/chor.io" element={<Landing/>} />
-        <Route path="/routineHome" element={<RoutineHome/>} />
+        <Route path="/Settings" element={<Settings/>} />
+        <Route path="/Overview" element={<Overview/>} />
       </Routes>
     </Router>
   );
