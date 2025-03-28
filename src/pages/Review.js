@@ -6,8 +6,8 @@ function Review(){
         <div>
             <h1>Review</h1>
             <button className="botContentButton" type="button">
-                <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-                    back
+                <Link to="/Overview" style={{ color: "black", textDecoration: "none" }}>
+                    Done
                 </Link>
             </button>
         </div>

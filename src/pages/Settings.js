@@ -105,6 +105,11 @@ function Settings() {
             <button className="botContentButton" type="button" onClick={handleSaveAndProceed}>
                 Save & Proceed to Overview
             </button>
+            <button className="botContentButton" type="button">
+                <Link to="/Overview" style={{ color: "black", textDecoration: "none" }}>
+                    Save
+                </Link>
+            </button>
         </div>
     );
 }

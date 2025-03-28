@@ -20,6 +20,24 @@ function Overview(){
                     Settings
                 </Link>
             </button>
+            <button className="botContentButton" type="button">
+                <Link to="/Modify" style={{ color: "black", textDecoration: "none" }}>
+                    Modify
+                </Link>
+            </button>
+            <button className="botContentButton" type="button">
+                <Link to="/Review" style={{ color: "black", textDecoration: "none" }}>
+                    Review
+                </Link>
+            </button>
+            <button className="botContentButton" type="button">
+                <Link to="/Settings" style={{ color: "black", textDecoration: "none" }}>
+                    Settings
+                </Link>
+            </button>
+
+
+
         </div>
     );
 }
