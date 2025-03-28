@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Landing() {
-    return (
+function Modify(){
+    return(
         <div>
-            <h1>Landing</h1>
+            <h1>Modify</h1>
             <button className="botContentButton" type="button">
-                <Link to="/routineHome" style={{ color: "black", textDecoration: "none" }}>
-                    Test
+                <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+                    back
                 </Link>
             </button>
         </div>
     );
 }
 
-export default Landing;
+export default Modify;

@@ -1,11 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function rHome(){
     return(
         <div>
             <h1>Routine</h1>
             <button className="botContentButton" type="button">
-                <a style={{color:"black"}}href="/">Back</a>
+                <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+                    back
+                </Link>
             </button>
         </div>
     );
