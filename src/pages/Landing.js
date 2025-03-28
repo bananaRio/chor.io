@@ -33,7 +33,12 @@ function Landing() {
             <h1>Landing</h1>
             <button className="botContentButton" type="button">
                 <Link to="/Overview" style={{ color: "black", textDecoration: "none" }}>
-                    Test
+                    Load Routine
+                </Link>
+            </button>
+            <button className="botContentButton" type="button">
+                <Link to="/Settings" style={{ color: "black", textDecoration: "none" }}>
+                    New Routine
                 </Link>
             </button>
             <br /><br />
