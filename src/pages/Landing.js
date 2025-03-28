@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import {saveAs} from "file-saver";
 
 function Landing() {
     const [jsonData, setJsonData] = useState({ routineName: "new routine" });
@@ -52,8 +53,24 @@ function Landing() {
         navigate("/Overview");
     };
 
+    const isValidfileName = (name) => {
+        const invalidChars = /[<>:"/\\|?*]/;
+        return name && name !== "new routine" && !invalidChars.test(name);
+    };
+
     const handleExport = () => {
 
+        if (!isValidfileName(jsonData.routineName)) {
+
+            alert("File cannot be exported due to file name");
+            return;
+        }
+
+        var blob = new Blob([JSON.stringify(jsonData)], {
+            type: "text/plain;charset=utf-8"
+        });
+
+        saveAs(blob, jsonData.routineName + ".json");
     }
 
     return (

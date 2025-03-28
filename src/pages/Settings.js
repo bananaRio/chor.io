@@ -26,6 +26,7 @@ function Settings() {
         setRoutine((prev) => ({ ...prev, [name]: value }));
     };
 
+    // TODO: protections for these and similar
     const handleDimensionChange = (e) => {
         const { name, value } = e.target;
         setRoutine((prev) => ({
