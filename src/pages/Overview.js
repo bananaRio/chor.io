@@ -1,29 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { use } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Overview(){
     const jsonData = JSON.parse(sessionStorage.getItem("uploadedJson"))
-
+    const navigate = useNavigate();
+    const handleBack = () => {
+        navigate("/");
+    }
+    const handleSettings = () => {
+        navigate("/Settings", {state: {"new": false}});
+    }
+    const handleModify = () => {
+        navigate("/Modify")
+    }
+    const handleReview = () => {
+        navigate("/Review")
+    }
     return(
         <div>
             <h1>Routine</h1>
             <p>Data goes here:
             {jsonData && <pre>{JSON.stringify(jsonData, null, 2)}</pre>}
             Data complete</p>
-            <button className="botContentButton" type="button">
-                <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-                    Landing
-                </Link>
+            <button className="botContentButton" type="button" onClick={handleBack}>
+                back
             </button>
-            <button className="botContentButton" type="button">
-                <Link to="/Settings" style={{ color: "black", textDecoration: "none" }}>
-                    Settings
-                </Link>
+            <button className="botContentButton" type="button" onClick={handleSettings}>
+                Settings
             </button>
-            <button className="botContentButton" type="button">
-                <Link to="/Modify" style={{ color: "black", textDecoration: "none" }}>
-                    Modify
-                </Link>
+            <button className="botContentButton" type="button" onClick={handleModify}>
+                Modify
+            </button>
+            <button className="botContentButton" type="button" onClick={handleReview}>
+                Review
             </button>
 
 

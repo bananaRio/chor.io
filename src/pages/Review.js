@@ -1,14 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Review(){
+    const navigate = useNavigate()
+    const handleDone = () => {
+        navigate("/Overview");
+    }
     return(
         <div>
             <h1>Review</h1>
-            <button className="botContentButton" type="button">
-                <Link to="/Overview" style={{ color: "black", textDecoration: "none" }}>
-                    Done
-                </Link>
+            <button className="botContentButton" type="button" onClick={handleDone}>
+                Done
             </button>
         </div>
     );

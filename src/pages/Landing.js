@@ -41,7 +41,7 @@ function Landing() {
 
         setJsonData(empty_routine);
         sessionStorage.setItem("uploadedJson", JSON.stringify(empty_routine));
-        navigate("/Settings");
+        navigate("/Settings", {state: {"new": true}});
     };
 
     const handleProceed = () => {
