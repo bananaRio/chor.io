@@ -8,15 +8,15 @@ function Overview() {
     const handleBack = () => {
         navigate("/");
     };
-    
+
     const handleSettings = () => {
         navigate("/Settings", { state: { new: false } });
     };
-    
+
     const handleModify = (moveId) => {
         navigate(`/Modify/${moveId}`);
     };
-    
+
     const handleReview = () => {
         navigate("/Review");
     };
@@ -58,18 +58,60 @@ function Overview() {
 
                 <h3>Moves</h3>
                 {jsonData && jsonData.moves && jsonData.moves.length > 0 ? (
-                    <ul>
+                    <ul style={{ padding: 0 }}>
                         {jsonData.moves.map((move, index) => (
-                            <li key={index}>
-                                <span>{move.name}</span>
-                                <button
-                                    className="botContentButton"
-                                    type="button"
-                                    onClick={() => handleModify(index)} // Navigate to /Modify/{moveId}
-                                    style={{ marginLeft: "10px" }}
+                            <li key={index} style={{ listStyle: "none", marginBottom: "15px" }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        padding: "8px",
+                                        borderRadius: "10px",
+                                        border: "1px solid #ddd",
+                                        backgroundColor: "#f9f9f9",
+                                    }}
                                 >
-                                    Modify
-                                </button>
+                                    {/* Color Bar */}
+                                    <div
+                                        style={{
+                                            width: "10px",
+                                            height: "30px",
+                                            backgroundColor: move.color,
+                                            borderRadius: "5px",
+                                            marginRight: "10px",
+                                        }}
+                                    ></div>
+
+                                    {/* Edit Button with Pencil Image */}
+                                    <button
+                                        className="botContentButton"
+                                        type="button"
+                                        onClick={() => handleModify(index)} // Navigate to /Modify/{moveId}
+                                        style={{
+                                            fontSize: "12px",
+                                            padding: "5px",
+                                            backgroundColor: "transparent",
+                                            border: "none",
+                                            borderRadius: "5px",
+                                            marginRight: "10px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}>
+                                        <img
+                                            src="/pencil.png" // Assuming the pencil image is in the public folder
+                                            alt="Edit"
+                                            style={{
+                                                width: "16px", // Adjust size of the pencil icon
+                                                height: "16px",
+                                                objectFit: "contain",
+                                            }}
+                                        />
+                                    </button>
+
+                                    {/* Move Name */}
+                                    <span>{move.name}</span>
+                                </div>
                             </li>
                         ))}
                     </ul>

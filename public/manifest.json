@@ -1,10 +1,15 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Chorio",
+  "name": "Chor.io in React!",
   "icons": [
     {
       "src": "choriologo.png",
       "sizes": "217x217",
+      "type": "image/png"
+    },
+    {
+      "src": "pencil.png",
+      "sizes": "445x445",
       "type": "image/png"
     }
   ],

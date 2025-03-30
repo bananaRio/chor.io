@@ -73,11 +73,7 @@ function Modify() {
                 color: color,
             };
 
-            if (id !== undefined && id !== "new") {
-                updatedMoves[id] = newMove;
-            } else {
-                updatedMoves.push(newMove);
-            }
+            updatedMoves.push(newMove);
 
             // Sort moves by startTime
             updatedMoves.sort((a, b) => a.startTime - b.startTime);
@@ -177,7 +173,6 @@ function Modify() {
                         onChange={(e) => setTime(Number(e.target.value))}
                     />
 
-                    {/* Time Input */}
                     <input
                         type="text"
                         className="form-control ms-3 text-center time-input"
