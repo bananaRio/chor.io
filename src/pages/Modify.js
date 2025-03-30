@@ -51,7 +51,7 @@ function Modify() {
         if (routineData) {
             let updatedMoves = [...routineData.moves];
 
-            // Check for duplicate time
+            // Check for duplicate time (if not overwriting)
             if (name === "New Move") {
                 alert("Error: Move name must not be New Move.");
                 return;
@@ -73,7 +73,13 @@ function Modify() {
                 color: color,
             };
 
-            updatedMoves.push(newMove);
+            if (id === "new") {
+                // For new move, push a new entry to the list
+                updatedMoves.push(newMove);
+            } else {
+                // For an existing move, replace the move at the given index
+                updatedMoves[parseInt(id)] = newMove;
+            }
 
             // Sort moves by startTime
             updatedMoves.sort((a, b) => a.startTime - b.startTime);
@@ -82,6 +88,7 @@ function Modify() {
             navigate("/Overview");
         }
     };
+
 
 
 

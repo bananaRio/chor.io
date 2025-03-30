@@ -5,8 +5,8 @@ function Overview() {
     const jsonData = JSON.parse(sessionStorage.getItem("uploadedJson"));
     const navigate = useNavigate();
 
-    const handleBack = () => {
-        navigate("/");
+    const handleLanding = () => {
+        navigate("/Landing");
     };
 
     const handleSettings = () => {
@@ -22,11 +22,11 @@ function Overview() {
     };
 
     const handleNewMove = () => {
-        navigate("/Modify/new");  // Navigate to the new move form
+        navigate("/Modify/new"); 
     };
 
     return (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", height: "100vh" }}>
             {/* Left Pane */}
             <div
                 style={{
@@ -34,9 +34,11 @@ function Overview() {
                     padding: "10px",
                     borderRight: "1px solid #ccc",
                     overflowY: "auto",
+                    maxHeight: "100vh",
+                    position: "sticky",
+                    top: "0",
                 }}
             >
-                {/* New Move Button */}
                 <div style={{ marginBottom: "20px" }}>
                     <button
                         className="botContentButton"
@@ -45,8 +47,6 @@ function Overview() {
                         style={{
                             width: "100%",
                             padding: "10px",
-                            backgroundColor: "#4CAF50", // Green color for emphasis
-                            color: "white",
                             border: "none",
                             borderRadius: "5px",
                             fontSize: "16px",
@@ -71,7 +71,6 @@ function Overview() {
                                         backgroundColor: "#f9f9f9",
                                     }}
                                 >
-                                    {/* Color Bar */}
                                     <div
                                         style={{
                                             width: "10px",
@@ -82,11 +81,10 @@ function Overview() {
                                         }}
                                     ></div>
 
-                                    {/* Edit Button with Pencil Image */}
                                     <button
                                         className="botContentButton"
                                         type="button"
-                                        onClick={() => handleModify(index)} // Navigate to /Modify/{moveId}
+                                        onClick={() => handleModify(index)}
                                         style={{
                                             fontSize: "12px",
                                             padding: "5px",
@@ -99,7 +97,7 @@ function Overview() {
                                             justifyContent: "center",
                                         }}>
                                         <img
-                                            src="/pencil.png" // Assuming the pencil image is in the public folder
+                                            src="/pencil.png"
                                             alt="Edit"
                                             style={{
                                                 width: "16px", // Adjust size of the pencil icon
@@ -109,7 +107,6 @@ function Overview() {
                                         />
                                     </button>
 
-                                    {/* Move Name */}
                                     <span>{move.name}</span>
                                 </div>
                             </li>
@@ -129,14 +126,11 @@ function Overview() {
                 )}
                 <p>Data complete</p>
 
-                <button className="botContentButton" type="button" onClick={handleBack}>
-                    Back
+                <button className="botContentButton" type="button" onClick={handleLanding}>
+                    Export or Load New File
                 </button>
                 <button className="botContentButton" type="button" onClick={handleSettings}>
                     Settings
-                </button>
-                <button className="botContentButton" type="button" onClick={handleModify}>
-                    Modify
                 </button>
                 <button className="botContentButton" type="button" onClick={handleReview}>
                     Review
