@@ -106,8 +106,34 @@ function Modify() {
                 <h4>Modify</h4>
                 <div>
                     <button className="btn btn-secondary me-2" onClick={() => navigate("/Overview")}>Discard Changes</button>
-                    <button className="btn btn-primary me-2" onClick={handleSave}>Save</button>
-                    {id !== undefined && <button className="btn btn-danger" onClick={handleDelete}>Delete</button>}
+
+                    <button
+                        type="button"
+                        onClick={handleSave}
+                        style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                    >
+                        <img
+                            src="/check.png"
+                            alt="Save"
+                            style={{ width: "30px", height: "30px" }}
+                        />
+                    </button>
+
+                    {id !== undefined && (
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                        >
+                            <img
+                                src="/trash.png"
+                                alt="Delete"
+                                style={{ width: "30px", height: "30px" }}
+                            />
+                        </button>
+                    )}
+
+
                 </div>
             </header>
 
