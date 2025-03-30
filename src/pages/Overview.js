@@ -6,7 +6,7 @@ function Overview() {
     const navigate = useNavigate();
 
     const handleLanding = () => {
-        navigate("/Landing");
+        navigate("/");
     };
 
     const handleSettings = () => {
@@ -132,9 +132,10 @@ function Overview() {
                 <button className="botContentButton" type="button" onClick={handleSettings}>
                     Settings
                 </button>
-                <button className="botContentButton" type="button" onClick={handleReview}>
+                {/*I'm disabling this for now, since it's completely blank */}
+                {/* <button className="botContentButton" type="button" onClick={handleReview}>
                     Review
-                </button>
+                </button> */}
             </div>
         </div>
     );
