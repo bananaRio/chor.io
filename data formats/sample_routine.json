@@ -11,7 +11,8 @@
       "description":"description text",
       "requirements_filled": [
         {"requirement_name":"text"}
-      ]
+      ],
+      "color":"gray"
     }
   ]
 }
