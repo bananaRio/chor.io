@@ -85,13 +85,6 @@ function Modify() {
         setPosition({ x, y });
     };
 
-    const handleCheckboxChange = (req) => {
-        setCheckedRequirements((prev) => ({
-            ...prev,
-            [req]: !prev[req],
-        }));
-    };
-
     return (
         <div className="container p-4">
             <header className="d-flex justify-content-between align-items-center bg-light p-2 rounded">
@@ -117,22 +110,32 @@ function Modify() {
                         <label className="form-label">Color</label>
                         <input type="color" className="form-control form-control-color" value={color} onChange={(e) => setColor(e.target.value)} />
                     </div>
-                    <div>
-                        <label className="form-label">Requirements</label>
-                        <div>
-                            {Object.keys(checkedRequirements).map((req) => (
-                                <div key={req} className="form-check">
+                    <div className="mt-4 p-3 bg-light rounded">
+                        <h4>Available Requirements</h4>
+
+                        {routineData?.requirements &&
+                            Object.keys(routineData.requirements).map((requirement, index) => (
+                                <div key={index} className="form-check">
                                     <input
                                         type="checkbox"
                                         className="form-check-input"
-                                        checked={!!checkedRequirements[req]}
-                                        onChange={() => handleCheckboxChange(req)}
+                                        id={`requirement-${index}`}
+                                        checked={checkedRequirements[requirement] || false}
+                                        onChange={() => {
+                                            setCheckedRequirements((prev) => ({
+                                                ...prev,
+                                                [requirement]: !prev[requirement],
+                                            }));
+                                        }}
                                     />
-                                    <label className="form-check-label">{req}</label>
+                                    <label className="form-check-label" htmlFor={`requirement-${index}`}>
+                                        {requirement}
+                                    </label>
                                 </div>
                             ))}
-                        </div>
                     </div>
+
+
                 </div>
 
                 <div className="col-md-6">

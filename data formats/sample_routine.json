@@ -13,5 +13,9 @@
       ],
       "color":"gray"
     }
-  ]
+  ],
+  "requirements": {
+    "requirement_name": 1,
+    "requirement_name_2": 3
+  }
 }
