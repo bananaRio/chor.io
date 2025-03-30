@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing/>} />
         <Route path="/chor.io" element={<Landing/>} />
-        <Route path="/Modify" element={<Modify/>} />
+        <Route path="/Modify/:id" element={<Modify/>} />
         <Route path="/Review" element={<Review/>} />
         <Route path="/Settings" element={<Settings/>} />
         <Route path="/Overview" element={<Overview/>} />

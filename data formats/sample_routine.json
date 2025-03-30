@@ -1,14 +1,13 @@
 {
-  "routineName":"test routine",
+  "routineName":"test",
   "music_source_path":"/",
   "dimensions":{"x":0, "y":0},
   "moves":[
     {
       "name":"move0",
-      "startTime":0,
-      "endTime":1,
-      "positions":{"x":0, "y":0},
       "description":"description text",
+      "startTime":0,
+      "positions":{"x":0, "y":0},
       "requirements_filled": [
         {"requirement_name":"text"}
       ],

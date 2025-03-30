@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function Overview(){
@@ -11,7 +11,7 @@ function Overview(){
         navigate("/Settings", {state: {"new": false}});
     }
     const handleModify = () => {
-        navigate("/Modify")
+        navigate("/Modify/new")
     }
     const handleReview = () => {
         navigate("/Review")
