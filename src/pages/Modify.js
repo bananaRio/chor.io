@@ -8,7 +8,7 @@ function Modify() {
     const [routineData, setRoutineData] = useState(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [time, setTime] = useState(0);
-    const [name, setName] = useState("");
+    const [name, setName] = useState("New Move");
     const [description, setDescription] = useState("");
     const [color, setColor] = useState("#000000");
     const [checkedRequirements, setCheckedRequirements] = useState({});
@@ -51,6 +51,17 @@ function Modify() {
         if (routineData) {
             let updatedMoves = [...routineData.moves];
 
+            // Check for duplicate time
+            if (name === "New Move") {
+                alert("Error: Move name must not be New Move.");
+                return;
+            }
+
+            if (updatedMoves.some((move, index) => move.startTime === time && index !== parseInt(id))) {
+                alert("Error: Another move already exists at this time.");
+                return;
+            }
+
             const newMove = {
                 name: name,
                 startTime: time,
@@ -75,6 +86,7 @@ function Modify() {
             navigate("/Overview");
         }
     };
+
 
 
 
