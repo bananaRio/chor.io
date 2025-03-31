@@ -72,6 +72,11 @@ function Landing() {
     };
 
     return (
+        <div>
+        <div className="d-flex justify-content-between align-items-center bg-light p-3 sticky-top">
+                <h2 className="m-0">Manage Routines</h2>
+        </div>
+
         <div className="d-flex" style={{ height: "100vh" }}>
             {/* Left Pane */}
             <div style={{ flex: 1, padding: "40px" }}>
@@ -120,6 +125,7 @@ function Landing() {
             <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <img src="/choriologo.png" alt="Logo" style={{ maxWidth: "80%", maxHeight: "80%" }} />
             </div>
+        </div>
         </div>
     );
 }
