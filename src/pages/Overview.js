@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ChoreographyMap from "../components/ChoreographyMap";
 
 function Overview() {
     const jsonData = JSON.parse(sessionStorage.getItem("uploadedJson"));
     const navigate = useNavigate();
+    
+    // Add state for position.
+    const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const handleBack = () => {
         navigate("/");
@@ -25,6 +29,11 @@ function Overview() {
         navigate("/Modify/new");  // Navigate to the new move form
     };
 
+    // Handle position updates from ChoreographyMap.
+    const handlePositionChange = (newPosition) => {
+        setPosition(newPosition);
+    };
+    
     return (
         <div style={{ display: "flex" }}>
             {/* Left Pane */}
@@ -80,6 +89,18 @@ function Overview() {
 
             {/* Main Content Area */}
             <div style={{ flex: 1, padding: "20px" }}>
+                <div>
+                    <h4>Position on Floor</h4>
+                    <div className="border rounded" style={{ height: '400px' }}>
+                        <ChoreographyMap 
+                            initialPosition={position} 
+                            onPositionChange={handlePositionChange} 
+                        />
+                    </div>
+                    <div className="mt-2">
+                        <p>Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}</p>
+                    </div>
+                </div>   
                 <h1>Routine</h1>
                 <p>Data goes here:</p>
                 {jsonData && (
