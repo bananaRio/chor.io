@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {saveAs} from "file-saver";
+import { saveAs } from "file-saver";
 
 function Landing() {
     const [jsonData, setJsonData] = useState({ routineName: "new routine" });
@@ -42,7 +42,7 @@ function Landing() {
 
         setJsonData(empty_routine);
         sessionStorage.setItem("uploadedJson", JSON.stringify(empty_routine));
-        navigate("/Settings", {state: {"new": true}});
+        navigate("/Settings", { state: { new: true } });
     };
 
     const handleProceed = () => {
@@ -59,44 +59,67 @@ function Landing() {
     };
 
     const handleExport = () => {
-
         if (!isValidfileName(jsonData.routineName)) {
-
             alert("File cannot be exported due to file name");
             return;
         }
 
-        var blob = new Blob([JSON.stringify(jsonData)], {
+        const blob = new Blob([JSON.stringify(jsonData)], {
             type: "text/plain;charset=utf-8"
         });
 
         saveAs(blob, jsonData.routineName + ".json");
-    }
+    };
 
     return (
-        <div>
-            <h2>Create New Routine</h2>
+        <div className="d-flex" style={{ height: "100vh" }}>
+            {/* Left Pane */}
+            <div style={{ flex: 1, padding: "40px" }}>
+                <header className="mb-4">
+                    <h2>Create New Routine</h2>
+                    <button
+                        className="btn btn-primary"
+                        type="button"
+                        onClick={handleNew}
+                    >
+                        Create New
+                    </button>
+                </header>
 
-            <button className="botContentButton" type="button" onClick={handleNew}>
-                Create New
-            </button>
+                <section className="mb-4">
+                    <h3>Load Routine File</h3>
+                    <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleFileUpload}
+                        ref={fileInputRef}
+                        className="form-control mb-2"
+                    />
+                    <button
+                        className="btn btn-secondary"
+                        type="button"
+                        onClick={handleProceed}
+                    >
+                        Proceed with <b>{jsonData.routineName}</b>
+                    </button>
+                </section>
 
-            <h2>Load Routine File</h2>
+                <section>
+                    <h3>Export to File</h3>
+                    <button
+                        className="btn btn-secondary"
+                        type="button"
+                        onClick={handleExport}
+                    >
+                        Export File
+                    </button>
+                </section>
+            </div>
 
-            <br />
-            <input type="file" accept=".json" onChange={handleFileUpload} ref={fileInputRef} />
-            <br /><br />
-
-            <button className="botContentButton" type="button" onClick={handleProceed}>
-                Proceed with 
-            </button> <b> {jsonData.routineName} </b>
-
-
-            <h2>Export to File</h2>
-
-            <button className="botContentButton" type="button" onClick={handleExport}>
-                Export File
-            </button>
+            {/* Right Pane */}
+            <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <img src="/choriologo.png" alt="Logo" style={{ maxWidth: "80%", maxHeight: "80%" }} />
+            </div>
         </div>
     );
 }
