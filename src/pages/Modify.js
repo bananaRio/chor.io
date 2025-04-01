@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect }  from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card } from "react-bootstrap";
+//import { Card } from "react-bootstrap";
+import ChoreographyMap from "../components/ChoreographyMap";
+import './Page.css';
 
 function Modify() {
     const navigate = useNavigate();
@@ -90,7 +92,10 @@ function Modify() {
     };
 
 
-
+    // Handle position updates from ChoreographyMap
+    const handlePositionChange = (newPosition) => {
+        setPosition(newPosition);
+    };
 
 
     const handleMapClick = (e) => {
@@ -177,10 +182,21 @@ function Modify() {
                     </div>
 
 
-                </div>
-
+                </div>         
                 <div className="col-md-6">
-                    <Card className="bg-light text-center p-4 position-relative" onClick={handleMapClick}>
+                    {/* <div>
+                        <h4>Position on Floor</h4>
+                        <div className="border rounded" style={{ height: '400px' }}>
+                            <ChoreographyMap 
+                                initialPosition={position} 
+                                onPositionChange={handlePositionChange} 
+                            />
+                        </div>
+                        <div className="mt-2">
+                            <p>Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}</p>
+                        </div>
+                    </div>    */}
+                    {/* <Card className="bg-light text-center p-4 position-relative" onClick={handleMapClick}>
                         Click to select a location
                         {position && (
                             <div
@@ -188,7 +204,7 @@ function Modify() {
                                 style={{ width: '10px', height: '10px', left: position.x, top: position.y }}
                             ></div>
                         )}
-                    </Card>
+                    </Card> */}
                 </div>
             </div>
 
