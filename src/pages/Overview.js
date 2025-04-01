@@ -26,6 +26,9 @@ function Overview() {
 
 
     const getDuration = () => {
+        if (jsonData?.duration) {
+            return jsonData.duration;
+        }
         if (!jsonData?.moves || jsonData.moves.length === 0) return 0;
         const lastMove = jsonData.moves[jsonData.moves.length - 1];
         return lastMove.startTime;

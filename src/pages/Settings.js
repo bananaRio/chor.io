@@ -40,6 +40,13 @@ function Settings(props) {
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const audio = new Audio();
+            audio.src = URL.createObjectURL(file);
+            console.log('Duration (seconds):', audio.duration);
+            audio.addEventListener('loadedmetadata', () => {
+                setRoutine((prev) => ({ ...prev, duration: audio?.duration || 0 }));
+              console.log('Duration (seconds):', audio.duration);
+            });
             const fileURL = URL.createObjectURL(file);
             setMusicFile(fileURL);
             setRoutine((prev) => ({ ...prev, music_source_path: fileURL }));
