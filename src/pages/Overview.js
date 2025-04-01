@@ -20,7 +20,7 @@ function Overview() {
     const handleBack = () => navigate("/");
     const handleSettings = () => navigate("/Settings", { state: { new: false } });
     const handleModify = (moveId) => navigate(`/Modify/${moveId}`);
-    const handleReview = () => navigate("/Review");
+    // const handleReview = () => navigate("/Review");
     const handleNewMove = () => navigate("/Modify/new");
 
 
@@ -38,27 +38,27 @@ function Overview() {
 
     const getCurrentMove = () => {
         if (!jsonData?.moves || jsonData.moves.length === 0) return null;
-      
+
         let current = null;
         for (const move of jsonData.moves) {
-          if (move.startTime <= currentTime) {
-            current = move;
-          } else {
-            break;
-          }
+            if (move.startTime <= currentTime) {
+                current = move;
+            } else {
+                break;
+            }
         }
         return current;
-      };
-      
-    
+    };
+
+
     const currentMove = getCurrentMove();
-    
+
     const getLabelLeftOffset = () => {
         const percent = duration ? currentTime / duration : 0;
-        const offset = 20; 
+        const offset = 20;
         return percent * sliderWidth - offset;
     };
-    
+
 
     // Time control handlers
     const handleTimeChange = (event) => {
@@ -67,9 +67,9 @@ function Overview() {
 
     const handlePlay = () => {
         if (isPlaying) return;
-        
+
         setIsPlaying(true);
-        
+
         if (playInterval.current) {
             clearInterval(playInterval.current);
         }
@@ -77,7 +77,7 @@ function Overview() {
         if (currentTime >= duration) {
             return;
         }
-        
+
         playInterval.current = setInterval(() => {
             setCurrentTime((prevTime) => {
                 if (prevTime >= duration) {
@@ -112,19 +112,19 @@ function Overview() {
         if (sliderRef.current) {
             setSliderWidth(sliderRef.current.offsetWidth);
         }
-    }, [sliderRef.current, jsonData]); 
+    }, [jsonData]);
 
     React.useEffect(() => {
         if (jsonData.music_source_path) {
             setMusicFile(jsonData.music_source_path);
         }
-    }, [])
+    }, [jsonData])
 
     React.useEffect(() => {
         if (playerRef.current) {
-          playerRef.current.currentTime = currentTime;
+            playerRef.current.currentTime = currentTime;
         }
-      }, [currentTime]);
+    }, [currentTime]);
 
     return (
 
@@ -140,12 +140,44 @@ function Overview() {
 
                 <h3>Moves</h3>
                 {jsonData && jsonData.moves && jsonData.moves.length > 0 ? (
-                    <ul>
+                    <ul className="list-unstyled">
                         {jsonData.moves.map((move, index) => (
-                            <li key={index}>
-                                <span>{move.name}</span>
-                                <button className="botContentButton" type="button" onClick={() => handleModify(index)} style={{ marginLeft: "10px" }}>
-                                    Modify
+                            <li key={index} className="d-flex align-items-center p-2 mb-2"
+                                style={{
+                                    backgroundColor: "#f8f9fa",
+                                    borderRadius: "10px",
+                                    border: "1px solid #ddd",
+                                }}>
+                                {/* Move Color Indicator */}
+                                <div
+                                    style={{
+                                        width: "6px",
+                                        height: "30px",
+                                        backgroundColor: move.color,
+                                        borderRadius: "3px",
+                                        marginRight: "10px",
+                                    }}>
+                                </div>
+
+                                {/* Move Name */}
+                                <span className="flex-grow-1" style={{ color: "black" }}>{move.name}</span>
+
+                                {/* Edit Button */}
+                                <button
+                                    type="button"
+                                    onClick={() => handleModify(index)}
+                                    className="btn btn-outline-secondary d-flex align-items-center"
+                                    style={{
+                                        padding: "5px 10px",
+                                        borderRadius: "8px",
+                                        backgroundColor: "white",
+                                    }}
+                                >
+                                    <img
+                                        src="/pencil.png"
+                                        alt="Edit"
+                                        style={{ width: "20px", height: "20px", marginRight: "5px" }}
+                                    />
                                 </button>
                             </li>
                         ))}
@@ -153,16 +185,19 @@ function Overview() {
                 ) : (
                     <p>No moves available</p>
                 )}
+
+
             </div>
 
             {/* Main Content Area */}
             <div style={{ flex: 1, padding: "20px" }}>
                 <div>
+                    <h2>{jsonData.routineName}</h2>
                     <h4>Position on Floor</h4>
                     <div className="border rounded" style={{ height: '400px' }}>
-                        <ChoreographyMap 
-                            initialPosition={position} 
-                            onPositionChange={handlePositionChange} 
+                        <ChoreographyMap
+                            initialPosition={position}
+                            onPositionChange={handlePositionChange}
                             currentTime={currentTime} // Pass time to child
                             moveList={jsonData?.moves}
                         />
@@ -170,7 +205,7 @@ function Overview() {
                     <div className="mt-2">
                         <p>Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}</p>
                     </div>
-                </div>   
+                </div>
 
                 {/* Time Controls */}
                 <div style={{ position: "relative", marginTop: "40px" }}>
@@ -211,21 +246,15 @@ function Overview() {
                     <button onClick={handlePause} disabled={!isPlaying}>Pause</button>
                 </div>
 
-                <h1>Routine</h1>
-                <p>Data goes here:</p>
-                {jsonData && (<pre style={{ color: "#9CA3AF" }}>{JSON.stringify(jsonData, null, 2)}</pre>
-                )}
-                <p>Data complete</p>
-
                 <button className="botContentButton" type="button" onClick={handleBack}>Back</button>
                 <button className="botContentButton" type="button" onClick={handleSettings}>Settings</button>
-                <button className="botContentButton" type="button" onClick={handleReview}>Review</button>
+                {/* <button className="botContentButton" type="button" onClick={handleReview}>Review</button> */}
                 {musicFile && (
-                        <div style={{ display: "none"}}>
-                            <p>Selected File:</p>
-                            <audio ref = {playerRef} controls src={musicFile}></audio>
-                        </div>
-                    )}
+                    <div style={{ display: "none" }}>
+                        <p>Selected File:</p>
+                        <audio ref={playerRef} controls src={musicFile}></audio>
+                    </div>
+                )}
 
             </div>
         </div>
