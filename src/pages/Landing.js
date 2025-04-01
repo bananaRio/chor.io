@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {saveAs} from "file-saver";
+import './Page.css';
 
 function Landing() {
     const [jsonData, setJsonData] = useState({ routineName: "new routine" });

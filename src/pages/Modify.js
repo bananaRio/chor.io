@@ -1,7 +1,8 @@
 import React, { useState, useEffect }  from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card } from "react-bootstrap";
+//import { Card } from "react-bootstrap";
 import ChoreographyMap from "../components/ChoreographyMap";
+import './Page.css';
 
 function Modify() {
     const navigate = useNavigate();
