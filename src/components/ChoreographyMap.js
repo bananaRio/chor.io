@@ -5,58 +5,58 @@ import floor_img from "../images/dance_floor1.png";
 import '../pages/Page.css';
 
 // a fixed color palette. Each new dance move will be assigned a color in sequence.
-const colorPalette = [
-  "#FF5733", // 1
-  "#33FF57", // 2
-  "#3357FF", // 3
-  "#FF33A8", // 4
-  "#A833FF", // 5
-  "#33FFF3", // 6
-  "#FFC133", // 7
-  "#FF8F33", // 8
-  "#33FF8F", // 9
-  "#8F33FF", // 10
-  "#FF3333", // 11
-  "#33FF33", // 12
-  "#3333FF", // 13
-  "#FF33FF", // 14
-  "#33FFFF", // 15
-  "#FFFF33", // 16
-  "#FF6633", // 17
-  "#33FF66", // 18
-  "#6633FF", // 19
-  "#FF3366", // 20
-  "#66FF33", // 21
-  "#3366FF", // 22
-  "#FF9933", // 23
-  "#33FF99", // 24
-  "#9933FF", // 25
-  "#FF3399", // 26
-  "#3399FF", // 27
-  "#99FF33", // 28
-  "#FFCC33", // 29
-  "#33FFCC", // 30
-  "#CC33FF", // 31
-  "#FF33CC", // 32
-  "#33CCFF", // 33
-  "#CCFF33", // 34
-  "#FF7733", // 35
-  "#33FF77", // 36
-  "#7733FF", // 37
-  "#FF3377", // 38
-  "#3377FF", // 39
-  "#77FF33", // 40
-  "#FFAA33", // 41
-  "#33FFAA", // 42
-  "#AA33FF", // 43
-  "#FF33AA", // 44
-  "#33AAFF", // 45
-  "#AAFF33", // 46
-  "#DD3344", // 47
-  "#44DD33", // 48
-  "#3344DD", // 49
-  "#DD4433"  // 50
-];
+// const colorPalette = [
+//   "#FF5733", // 1
+//   "#33FF57", // 2
+//   "#3357FF", // 3
+//   "#FF33A8", // 4
+//   "#A833FF", // 5
+//   "#33FFF3", // 6
+//   "#FFC133", // 7
+//   "#FF8F33", // 8
+//   "#33FF8F", // 9
+//   "#8F33FF", // 10
+//   "#FF3333", // 11
+//   "#33FF33", // 12
+//   "#3333FF", // 13
+//   "#FF33FF", // 14
+//   "#33FFFF", // 15
+//   "#FFFF33", // 16
+//   "#FF6633", // 17
+//   "#33FF66", // 18
+//   "#6633FF", // 19
+//   "#FF3366", // 20
+//   "#66FF33", // 21
+//   "#3366FF", // 22
+//   "#FF9933", // 23
+//   "#33FF99", // 24
+//   "#9933FF", // 25
+//   "#FF3399", // 26
+//   "#3399FF", // 27
+//   "#99FF33", // 28
+//   "#FFCC33", // 29
+//   "#33FFCC", // 30
+//   "#CC33FF", // 31
+//   "#FF33CC", // 32
+//   "#33CCFF", // 33
+//   "#CCFF33", // 34
+//   "#FF7733", // 35
+//   "#33FF77", // 36
+//   "#7733FF", // 37
+//   "#FF3377", // 38
+//   "#3377FF", // 39
+//   "#77FF33", // 40
+//   "#FFAA33", // 41
+//   "#33FFAA", // 42
+//   "#AA33FF", // 43
+//   "#FF33AA", // 44
+//   "#33AAFF", // 45
+//   "#AAFF33", // 46
+//   "#DD3344", // 47
+//   "#44DD33", // 48
+//   "#3344DD", // 49
+//   "#DD4433"  // 50
+// ];
 
 // A custom cursor: a 16x16 circle image, with its hotspot at (8,8).
 // (If you want, you can adjust this data URI.)
@@ -213,28 +213,28 @@ function ChoreographyMap({ initialPosition, onPositionChange, moveList}) {
   };
 
   // add a new dance move. The color is chosen deterministically from a fixed palette.
-  const handleAddMove = () => {
-    let newX, newY;
-    if (targets.length === 0) {
-      newX = stageWidth / 2;
-      newY = stageHeight / 2;
-    } else {
-      const lastTarget = targets[targets.length - 1];
-      newX = lastTarget.x + 30;
-      newY = lastTarget.y;
-    }
-    // cycle through the palette.
-    const color = colorPalette[targets.length % colorPalette.length];
+  // const handleAddMove = () => {
+  //   let newX, newY;
+  //   if (targets.length === 0) {
+  //     newX = stageWidth / 2;
+  //     newY = stageHeight / 2;
+  //   } else {
+  //     const lastTarget = targets[targets.length - 1];
+  //     newX = lastTarget.x + 30;
+  //     newY = lastTarget.y;
+  //   }
+  //   // cycle through the palette.
+  //   const color = colorPalette[targets.length % colorPalette.length];
 
-    const newTarget = {
-      x: newX,
-      y: newY,
-      id: `target-${Date.now()}`,
-      note: `Move ${targets.length + 1}`,
-      color, // use deterministic color.
-    };
-    setTargets([...targets, newTarget]);
-  };
+  //   const newTarget = {
+  //     x: newX,
+  //     y: newY,
+  //     id: `target-${Date.now()}`,
+  //     note: `Move ${targets.length + 1}`,
+  //     color, // use deterministic color.
+  //   };
+  //   setTargets([...targets, newTarget]);
+  // };
 
   // stage click (optional0)
   const handleStageClick = (e) => {

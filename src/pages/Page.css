@@ -1,4 +1,7 @@
-html, body {
+.choreography-map {
+    background: transparent
+}
+html, body, div {
     background-color: #26222B;
     color: #9CA3AF;
 }

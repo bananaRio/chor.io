@@ -194,12 +194,22 @@ function Overview() {
                 <div>
                     <h2>{jsonData.routineName}</h2>
                     <h4>Position on Floor</h4>
-                    <div className="border rounded" style={{ height: '400px' }}>
+                    <div className="border rounded" style={{
+                        height: "400px",
+                        padding: "0",
+                        margin: "0",
+                        border: "none",
+                        background: "transparent",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}>
                         <ChoreographyMap
                             initialPosition={position}
                             onPositionChange={handlePositionChange}
                             currentTime={currentTime} // Pass time to child
                             moveList={jsonData?.moves}
+                            style={{ background: "transparent" }}
                         />
                     </div>
                     <div className="mt-2">
