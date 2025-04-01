@@ -118,7 +118,7 @@ function Modify() {
                         style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
                     >
                         <img
-                            src="/check.png"
+                            src="./images/check.png"
                             alt="Save"
                             style={{ width: "30px", height: "30px" }}
                         />
@@ -131,7 +131,7 @@ function Modify() {
                             style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
                         >
                             <img
-                                src="/trash.png"
+                                src="./images/trash.png"
                                 alt="Delete"
                                 style={{ width: "30px", height: "30px" }}
                             />

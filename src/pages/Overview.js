@@ -174,7 +174,7 @@ function Overview() {
                                     }}
                                 >
                                     <img
-                                        src="/pencil.png"
+                                        src="./images/pencil.png"
                                         alt="Edit"
                                         style={{ width: "20px", height: "20px", marginRight: "5px" }}
                                     />
