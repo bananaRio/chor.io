@@ -3,27 +3,27 @@
   "name": "Chor.io in React!",
   "icons": [
     {
-      "src": "choriologo.png",
+      "src": "./images/choriologo.png",
       "sizes": "217x217",
       "type": "image/png"
     },
     {
-      "src": "pencil.png",
+      "src": "./images/pencil.png",
       "sizes": "445x445",
       "type": "image/png"
     },
     {
-      "src": "gear.png",
+      "src": "./images/gear.png",
       "sizes": "700x700",
       "type": "image/png"
     },
     {
-      "src": "check.png",
+      "src": "./images/check.png",
       "sizes": "700x700",
       "type": "image/png"
     },
     {
-      "src": "trash.png",
+      "src": "./images/trash.png",
       "sizes": "700x700",
       "type": "image/png"
     }
