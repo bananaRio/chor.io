@@ -17,7 +17,6 @@ function Overview() {
     const sliderRef = useRef(null);
     const [sliderWidth, setSliderWidth] = useState(0);
 
-    
     const handleBack = () => navigate("/");
     const handleSettings = () => navigate("/Settings", { state: { new: false } });
     const handleModify = (moveId) => navigate(`/Modify/${moveId}`);
@@ -128,6 +127,7 @@ function Overview() {
       }, [currentTime]);
 
     return (
+
         <div style={{ display: "flex" }}>
             {/* Left Pane */}
             <div style={{ width: "300px", padding: "10px", borderRight: "1px solid #ccc", overflowY: "auto" }}>
@@ -211,7 +211,6 @@ function Overview() {
                     <button onClick={handlePause} disabled={!isPlaying}>Pause</button>
                 </div>
 
-
                 <h1>Routine</h1>
                 <p>Data goes here:</p>
                 {jsonData && (<pre style={{ color: "#9CA3AF" }}>{JSON.stringify(jsonData, null, 2)}</pre>
@@ -227,6 +226,7 @@ function Overview() {
                             <audio ref = {playerRef} controls src={musicFile}></audio>
                         </div>
                     )}
+
             </div>
         </div>
     );

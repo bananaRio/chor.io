@@ -61,7 +61,6 @@ function Settings(props) {
     };
     
     const handleBack = () => {
-        alert("You have not saved");
         const prev = loc.state.new ? "/" : "/Overview";
         navigate(prev);
     }

@@ -53,7 +53,7 @@ function Modify() {
         if (routineData) {
             let updatedMoves = [...routineData.moves];
 
-            // Check for duplicate time
+            // Check for duplicate time (if not overwriting)
             if (name === "New Move") {
                 alert("Error: Move name must not be New Move.");
                 return;
@@ -75,10 +75,12 @@ function Modify() {
                 color: color,
             };
 
-            if (id !== undefined && id !== "new") {
-                updatedMoves[id] = newMove;
-            } else {
+            if (id === "new") {
+                // For new move, push a new entry to the list
                 updatedMoves.push(newMove);
+            } else {
+                // For an existing move, replace the move at the given index
+                updatedMoves[parseInt(id)] = newMove;
             }
 
             // Sort moves by startTime
@@ -95,6 +97,7 @@ function Modify() {
         setPosition(newPosition);
     };
 
+
     const handleMapClick = (e) => {
         const rect = e.target.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -108,8 +111,34 @@ function Modify() {
                 <h4>Modify</h4>
                 <div>
                     <button className="btn btn-secondary me-2" onClick={() => navigate("/Overview")}>Discard Changes</button>
-                    <button className="btn btn-primary me-2" onClick={handleSave}>Save</button>
-                    {id !== undefined && <button className="btn btn-danger" onClick={handleDelete}>Delete</button>}
+
+                    <button
+                        type="button"
+                        onClick={handleSave}
+                        style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                    >
+                        <img
+                            src="/check.png"
+                            alt="Save"
+                            style={{ width: "30px", height: "30px" }}
+                        />
+                    </button>
+
+                    {id !== undefined && (
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+                        >
+                            <img
+                                src="/trash.png"
+                                alt="Delete"
+                                style={{ width: "30px", height: "30px" }}
+                            />
+                        </button>
+                    )}
+
+
                 </div>
             </header>
 
@@ -193,7 +222,6 @@ function Modify() {
                         onChange={(e) => setTime(Number(e.target.value))}
                     />
 
-                    {/* Time Input */}
                     <input
                         type="text"
                         className="form-control ms-3 text-center time-input"
