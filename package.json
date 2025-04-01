@@ -1,7 +1,7 @@
 {
   "name": "chor.io",
   "version": "0.1.0",
-  "homepage": ".",
+  "homepage": "https://bananario.github.io/chor.io/",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
