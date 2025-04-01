@@ -61,7 +61,7 @@ const colorPalette = [
 // (If you want, you can adjust this data URI.)
 const circleCursor = "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABFElEQVQ4T6WTv0tCURSGv3v3O7jS0KLiIjiAhFGJBDa7CJDRBEKmaBYFBRaJECQiJAkSKKoqAhVhGKBCEQnqIipCqtS35u7s5Mx83Lfz/x7cOe8z7nvvOuBkhHbBaJ6ycxHh+Pbt2BOAvf4QH+MFwjVX0j1EJexRS+CK0EHULRr6C9HNb+z9w0k6tBfEV0qksIlIfRfTJwTOb4vHyg9P0/MUzEIXYV8n6HVp1tW6LVr1/IGKxj6eGPJK+zy1+k4ZkN86qjQInF+Hhe4GygbeIcx3WJxA0S0r8TYb0G9BxK36uAdl2/xX3F9SY6POq+zZp/VgfdAC+7mDfv/1EdvBv3ghjS8E1sgQAAAABJRU5ErkJggg==') 8 8, pointer";
 
-function ChoreographyMap({ initialPosition, onPositionChange }) {
+function ChoreographyMap({ initialPosition, onPositionChange, moveList}) {
   const [mapBackground] = useImage(floor_img);
   const [targets, setTargets] = useState([]);
   // connectorOffsets: one per connector, each is {dx, dy} relative to default midpoint.
@@ -224,6 +224,7 @@ function ChoreographyMap({ initialPosition, onPositionChange }) {
     }
     // cycle through the palette.
     const color = colorPalette[targets.length % colorPalette.length];
+
     const newTarget = {
       x: newX,
       y: newY,
@@ -261,6 +262,25 @@ function ChoreographyMap({ initialPosition, onPositionChange }) {
     );
   };
 
+  React.useEffect(() => {
+    if (!isInitialized && moveList && moveList.length > 0) {
+      const newTargets = moveList.map((move, index) => {
+        const baseX = stageWidth / 2;
+        const baseY = stageHeight / 2;
+        return {
+          x: baseX + index * 30,
+          y: baseY,
+          id: move.name,
+          note: move.name,
+          color: move.color,
+        };
+      });
+  
+      setTargets(newTargets);
+      setIsInitialized(true); // prevent re-running
+    }
+  }, [isInitialized, moveList]);
+  
   return (
     <div>
       <div style={{ marginBottom: "8px" }}>
