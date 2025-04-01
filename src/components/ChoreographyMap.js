@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Stage, Layer, Circle, Arrow, Text, Image } from "react-konva";
 import useImage from "use-image";
 import floor_img from "../images/dance_floor1.png";
+import '../pages/Page.css';
 
 // a fixed color palette. Each new dance move will be assigned a color in sequence.
 const colorPalette = [
@@ -283,9 +284,9 @@ function ChoreographyMap({ initialPosition, onPositionChange, moveList}) {
   
   return (
     <div>
-      <div style={{ marginBottom: "8px" }}>
+      {/* <div style={{ marginBottom: "8px" }}>
         <button onClick={handleAddMove}>Add Dance Move</button>
-      </div>
+      </div> */}
       <Stage
         ref={stageRef}
         width={stageWidth}
