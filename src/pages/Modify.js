@@ -152,17 +152,19 @@ function Modify() {
           <button
             type="button"
             onClick={handleSave}
-            style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", marginRight: "5px" }}
+            style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", marginRight: "5px", color: "#9CA3AF" }}
           >
-            <img src="./images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} />
+            Save
+            {/*<img src="./images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} />*/}
           </button>
           {id !== "new" && (
             <button
               type="button"
               onClick={handleDelete}
-              style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}
+              style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", color: "#9CA3AF"}}
             >
-              <img src="./images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />
+              Delete
+              {/*<img src="./images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
             </button>
           )}
         </div>

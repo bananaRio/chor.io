@@ -134,13 +134,15 @@ function Overview() {
                     padding: "5px 10px",
                     borderRadius: "8px",
                     backgroundColor: "white",
+                    color: "#9CA3AF"
                   }}
                 >
-                  <img
+                    Modify
+                  {/*<img
                     src="./images/pencil.png"
                     alt="Edit"
                     style={{ width: "20px", height: "20px", marginRight: "5px" }}
-                  />
+                  />*/}
                 </button>
               </li>
             ))}
