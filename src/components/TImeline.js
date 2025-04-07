@@ -62,11 +62,16 @@ function Timeline({
   }, [duration, internalTime, editableOnly, currentMove]);
 
   const getLabelLeftOffset = () => {
-    if (!sliderWidth || !duration) return 0;
+    if (!sliderRef.current || !duration) return 0;
+    const slider = sliderRef.current;
+    const rect = slider.getBoundingClientRect();
     const percent = internalTime / duration;
-    const offset = 20;
-    return percent * sliderWidth - offset;
+    const thumbX = percent * slider.clientWidth;
+    return thumbX;
   };
+  
+  
+  
 
   const handleTimeChange = (e) => {
     const newTime = parseFloat(e.target.value);
@@ -145,9 +150,9 @@ function Timeline({
           <div
             style={{
               position: "absolute",
+              top: "-35px", 
               left: getLabelLeftOffset(),
-              top: -25,
-              transform: "translateX(-50%)",
+              transform: "translateX(-37%)", 
               fontWeight: "bold",
               backgroundColor: "#fff",
               padding: "4px 8px",
