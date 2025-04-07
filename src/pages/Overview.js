@@ -8,12 +8,15 @@ function Overview() {
   const jsonData = JSON.parse(sessionStorage.getItem("uploadedJson"));
   const navigate = useNavigate();
   const playerRef = useRef(null);
+  const lastMoveRef = useRef(null);
 
   const [musicFile, setMusicFile] = useState(null);
   const [musicDuration, setMusicDuration] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [editedDescription, setEditedDescription] = useState("");
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
 
   const handleBack = () => navigate("/");
   const handleSettings = () => navigate("/Settings", { state: { new: false } });
@@ -48,6 +51,33 @@ function Overview() {
       setMusicFile(jsonData.music_source_path);
     }
   }, [jsonData]);
+
+  useEffect(() => {
+    if (
+      currentMove &&
+      (!lastMoveRef.current || lastMoveRef.current.name !== currentMove.name || lastMoveRef.current.startTime !== currentMove.startTime)
+    ) {
+      setEditedDescription(currentMove.description || "");
+      lastMoveRef.current = currentMove;
+    }
+  }, [currentMove]);
+
+  const handleSaveDescription = () => {
+    if (!currentMove || !jsonData?.moves) return;
+
+    const updatedMoves = jsonData.moves.map(move => {
+      if (move.name === currentMove.name && move.startTime === currentMove.startTime) {
+        return { ...move, description: editedDescription };
+      }
+      return move;
+    });
+
+    sessionStorage.setItem(
+      "uploadedJson",
+      JSON.stringify({ ...jsonData, moves: updatedMoves })
+    );
+    setIsEditingDescription(false);
+  };
 
   return (
     <div style={{ display: "flex" }}>
@@ -120,69 +150,131 @@ function Overview() {
         )}
       </div>
 
-      {/* Main Content Area */}
       <div style={{ flex: 1, padding: "20px" }}>
         <div>
           <h2>{jsonData.routineName}</h2>
-          <h4>Position on Floor</h4>
-          <div
-            className="border rounded"
-            style={{
-              height: "400px",
-              padding: "0",
-              margin: "0",
-              border: "none",
-              background: "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <ChoreographyMap
-              moveList={jsonData?.moves}
-              isEditable={false}
-              connectorOffsets={jsonData.connectorOffsets || []}
-            />
+
+          <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+            <div style={{ flex: 2 }}>
+              <h4>Position on Floor</h4>
+              <div className="border rounded" style={{
+                height: "400px",
+                padding: "0",
+                margin: "0",
+                border: "none",
+                background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                <ChoreographyMap
+                  moveList={jsonData?.moves}
+                  isEditable={false}
+                  connectorOffsets={jsonData.connectorOffsets || []}
+                />
+              </div>
+              <div className="mt-2">
+                <p>
+                  Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <h4>Current Move Details</h4>
+              {currentMove ? (
+                <div style={{
+                  backgroundColor: "#f8f9fa",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  border: `2px solid ${currentMove.color || "#ddd"}`,
+                  height: "400px",
+                  display: "flex",
+                  flexDirection: "column"
+                }}>
+                  <h5 style={{ marginBottom: "10px", color: currentMove.color }}>
+                    {currentMove.name}
+                  </h5>
+
+                  <textarea
+                    value={editedDescription}
+                    onChange={(e) => setEditedDescription(e.target.value)}
+                    style={{
+                      flex: 1,
+                      padding: "10px",
+                      borderRadius: "5px",
+                      border: "1px solid #ccc",
+                      marginBottom: "10px",
+                      resize: "none"
+                    }}
+                    placeholder="Enter move description..."
+                  />
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      onClick={handleSaveDescription}
+                      style={{
+                        padding: "8px 15px",
+                        backgroundColor: "#4CAF50",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px"
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div style={{
+                  backgroundColor: "#f8f9fa",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  border: "2px solid #ddd",
+                  height: "400px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <p>No move selected at current time</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="mt-2">
-            <p>
-              Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}
-            </p>
+
+          <Timeline
+            duration={duration}
+            currentTime={currentTime}
+            setCurrentTime={setCurrentTime}
+            currentMove={currentMove}
+            playerRef={playerRef}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+          />
+
+          <div style={{ marginTop: "20px" }}>
+            <button className="botContentButton" type="button" onClick={handleBack}>
+              Back
+            </button>
+            <button className="botContentButton" type="button" onClick={handleSettings}>
+              Settings
+            </button>
           </div>
+
+          {musicFile && (
+            <div style={{ display: "none" }}>
+              <audio
+                ref={playerRef}
+                controls
+                src={musicFile}
+                onLoadedMetadata={() => {
+                  if (playerRef.current?.duration) {
+                    setMusicDuration(playerRef.current.duration);
+                  }
+                }}
+              />
+            </div>
+          )}
         </div>
-
-        {/* Timeline */}
-        <Timeline
-          duration={duration}
-          currentTime={currentTime}
-          setCurrentTime={setCurrentTime}
-          currentMove={currentMove}
-          playerRef={playerRef}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-        />
-
-        <button className="botContentButton" type="button" onClick={handleBack}>
-          Back
-        </button>
-        <button className="botContentButton" type="button" onClick={handleSettings}>
-          Settings
-        </button>
-
-        {musicFile && (
-          <div style={{ display: "none" }}>
-            <audio
-              ref={playerRef}
-              controls
-              src={musicFile}
-              onLoadedMetadata={() => {
-                if (playerRef.current?.duration) {
-                  setMusicDuration(playerRef.current.duration);
-                }
-              }}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
