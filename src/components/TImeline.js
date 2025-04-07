@@ -15,6 +15,7 @@ function Timeline({
   const animationFrameRef = useRef(null);
   const [internalTime, setInternalTime] = useState(currentTime);
   const [hasConflict, setHasConflict] = useState(false);
+  const [moveSegments, setMoveSegments] = useState([]);
 
   const updateSliderWidth = () => {
     if (sliderRef.current) {
@@ -33,17 +34,32 @@ function Timeline({
   }, [currentTime]);
 
   useEffect(() => {
-    if (!editableOnly || !currentMove) return;
-
+    // Load and process move segments
     const storedData = JSON.parse(sessionStorage.getItem("uploadedJson"));
     if (!storedData?.moves) return;
 
-    const conflict = storedData.moves.some((move) => {
-      return move.startTime === internalTime && move.name !== currentMove.name;
+    // Sort moves by startTime and calculate segments
+    const sortedMoves = [...storedData.moves].sort((a, b) => a.startTime - b.startTime);
+    const segments = sortedMoves.map((move, index) => {
+      const nextMove = sortedMoves[index + 1];
+      const endTime = nextMove ? nextMove.startTime : duration;
+      return {
+        ...move,
+        endTime,
+        widthPercent: ((endTime - move.startTime) / duration) * 100
+      };
     });
+    
+    setMoveSegments(segments);
 
-    setHasConflict(conflict);
-  }, [internalTime, editableOnly, currentMove]);
+    // Check for conflicts if in editable mode
+    if (editableOnly && currentMove) {
+      const conflict = storedData.moves.some((move) => {
+        return move.startTime === internalTime && move.name !== currentMove.name;
+      });
+      setHasConflict(conflict);
+    }
+  }, [duration, internalTime, editableOnly, currentMove]);
 
   const getLabelLeftOffset = () => {
     if (!sliderWidth || !duration) return 0;
@@ -93,7 +109,7 @@ function Timeline({
   };
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", position: "relative" }}>
       <div
         style={{
           backgroundColor: "#1e1c23",
@@ -102,6 +118,29 @@ function Timeline({
           position: "relative"
         }}
       >
+        {/* Move segments background */}
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          left: '24px',
+          right: '24px',
+          height: '12px',
+          display: 'flex',
+          borderRadius: '8px',
+          overflow: 'hidden'
+        }}>
+          {moveSegments.map((move, index) => (
+            <div 
+              key={index}
+              style={{
+                width: `${move.widthPercent}%`,
+                backgroundColor: move.color || '#ccc',
+                height: '100%'
+              }}
+            />
+          ))}
+        </div>
+
         {currentMove && (
           <div
             style={{
@@ -136,9 +175,11 @@ function Timeline({
             height: "12px",
             borderRadius: "8px",
             appearance: "none",
-            backgroundColor: "#ccc",
+            backgroundColor: "transparent",
             outline: "none",
-            accentColor: hasConflict ? "red" : "#007bff" // 🎯 bubble color
+            position: 'relative',
+            zIndex: 2,
+            accentColor: hasConflict ? "red" : "#007bff"
           }}
         />
       </div>
