@@ -17,6 +17,8 @@ function Overview() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [editedDescription, setEditedDescription] = useState("");
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  // this is to track which move (by index) is selected for editing via double-click.
+  const [selectedMoveIndex, setSelectedMoveIndex] = useState(null);
 
   const handleBack = () => navigate("/");
   const handleSettings = () => navigate("/Settings", { state: { new: false } });
@@ -31,7 +33,8 @@ function Overview() {
 
   const duration = musicDuration || getFallbackDuration();
 
-  const getCurrentMove = () => {
+  // Calculate the timeline-based current move in case no move was double-clicked.
+  const currentMoveFromTime = (() => {
     if (!jsonData?.moves || jsonData.moves.length === 0) return null;
     let current = null;
     for (const move of jsonData.moves) {
@@ -42,31 +45,35 @@ function Overview() {
       }
     }
     return current;
-  };
+  })();
 
-  const currentMove = getCurrentMove();
+  // determine which move’s notes to display.
+  const currentEffectiveMove =
+    selectedMoveIndex !== null ? jsonData.moves[selectedMoveIndex] : currentMoveFromTime;
 
-  useEffect(() => {
-    if (jsonData?.music_source_path) {
-      setMusicFile(jsonData.music_source_path);
-    }
-  }, [jsonData]);
-
+  // when the effective move changes, update the notes editing text.
   useEffect(() => {
     if (
-      currentMove &&
-      (!lastMoveRef.current || lastMoveRef.current.name !== currentMove.name || lastMoveRef.current.startTime !== currentMove.startTime)
+      currentEffectiveMove &&
+      (!lastMoveRef.current ||
+        lastMoveRef.current.name !== currentEffectiveMove.name ||
+        lastMoveRef.current.startTime !== currentEffectiveMove.startTime)
     ) {
-      setEditedDescription(currentMove.description || "");
-      lastMoveRef.current = currentMove;
+      setEditedDescription(currentEffectiveMove.description || "");
+      lastMoveRef.current = currentEffectiveMove;
     }
-  }, [currentMove]);
+  }, [currentEffectiveMove]);
 
+  // when saving, update the move’s description accordingly.
   const handleSaveDescription = () => {
-    if (!currentMove || !jsonData?.moves) return;
+    if (!currentEffectiveMove || !jsonData?.moves) return;
 
-    const updatedMoves = jsonData.moves.map(move => {
-      if (move.name === currentMove.name && move.startTime === currentMove.startTime) {
+    const updatedMoves = jsonData.moves.map((move, index) => {
+      if (
+        selectedMoveIndex !== null
+          ? index === selectedMoveIndex
+          : move.name === currentEffectiveMove.name && move.startTime === currentEffectiveMove.startTime
+      ) {
         return { ...move, description: editedDescription };
       }
       return move;
@@ -81,7 +88,7 @@ function Overview() {
 
   return (
     <div style={{ display: "flex" }}>
-      {/* Left Pane */}
+      {/* Left Pane – Moves List */}
       <div style={{ width: "300px", padding: "10px", borderRight: "1px solid #ccc", overflowY: "auto" }}>
         <div style={{ marginBottom: "20px" }}>
           <button
@@ -112,6 +119,12 @@ function Overview() {
                   backgroundColor: "#f8f9fa",
                   borderRadius: "10px",
                   border: "1px solid #ddd",
+                  cursor: "pointer",
+                }}
+                // double-clicking the list item selects the move.
+                onDoubleClick={() => {
+                  setSelectedMoveIndex(index);
+                  setEditedDescription(move.description || "");
                 }}
               >
                 <div
@@ -137,12 +150,7 @@ function Overview() {
                     color: "#9CA3AF"
                   }}
                 >
-                    Modify
-                  {/*<img
-                    src="./images/pencil.png"
-                    alt="Edit"
-                    style={{ width: "20px", height: "20px", marginRight: "5px" }}
-                  />*/}
+                  Modify
                 </button>
               </li>
             ))}
@@ -152,10 +160,10 @@ function Overview() {
         )}
       </div>
 
+      {/* Right Pane – Editing UI and Floor Map */}
       <div style={{ flex: 1, padding: "20px" }}>
         <div>
           <h2>{jsonData.routineName}</h2>
-
           <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
             <div style={{ flex: 2 }}>
               <h4>Position on Floor</h4>
@@ -173,6 +181,11 @@ function Overview() {
                   moveList={jsonData?.moves}
                   isEditable={false}
                   connectorOffsets={jsonData.connectorOffsets || []}
+                  // NEW: Pass the double-click handler from the map.
+                  onMoveDoubleClick={(index) => {
+                    setSelectedMoveIndex(index);
+                    setEditedDescription(jsonData.moves[index].description || "");
+                  }}
                 />
               </div>
               <div className="mt-2">
@@ -184,20 +197,19 @@ function Overview() {
 
             <div style={{ flex: 1 }}>
               <h4>Current Move Details</h4>
-              {currentMove ? (
+              {currentEffectiveMove ? (
                 <div style={{
                   backgroundColor: "#f8f9fa",
                   padding: "15px",
                   borderRadius: "8px",
-                  border: `2px solid ${currentMove.color || "#ddd"}`,
+                  border: `2px solid ${currentEffectiveMove.color || "#ddd"}`,
                   height: "400px",
                   display: "flex",
                   flexDirection: "column"
                 }}>
-                  <h5 style={{ marginBottom: "10px", color: currentMove.color }}>
-                    {currentMove.name}
+                  <h5 style={{ marginBottom: "10px", color: currentEffectiveMove.color }}>
+                    {currentEffectiveMove.name}
                   </h5>
-
                   <textarea
                     value={editedDescription}
                     onChange={(e) => setEditedDescription(e.target.value)}
@@ -247,7 +259,7 @@ function Overview() {
             duration={duration}
             currentTime={currentTime}
             setCurrentTime={setCurrentTime}
-            currentMove={currentMove}
+            currentMove={currentEffectiveMove}
             playerRef={playerRef}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}

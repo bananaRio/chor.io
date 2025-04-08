@@ -9,7 +9,9 @@ function ChoreographyMap({
   onEditableMoveChange,
   isEditable = true,
   connectorOffsets = [],
-  onConnectorOffsetsChange = () => {}
+  onConnectorOffsetsChange = () => {},
+  // optional callback for double-clicking a move on the map
+  onMoveDoubleClick = () => {}
 }) {
   const [mapBackground] = useImage(floor_img);
   const stageWidth = 800;
@@ -118,10 +120,16 @@ function ChoreographyMap({
         )}
         {generateConnectors()}
         {renderControlHotspots()}
-        {/* render saved moves (non-editable) */}
-        {moveList.map((move) => (
-          <React.Fragment key={move.name}>
-            <Circle x={move.positions.x} y={move.positions.y} radius={20} fill={move.color} />
+        {/* render saved moves (non-editable) with double-click functionality */}
+        {moveList.map((move, index) => (
+          <React.Fragment key={move.name + index}>
+            <Circle 
+              x={move.positions.x} 
+              y={move.positions.y} 
+              radius={20} 
+              fill={move.color}
+              onDblClick={(e) => onMoveDoubleClick(index)}
+            />
             <Text x={move.positions.x + 25} y={move.positions.y - 10} text={move.name} fontSize={16} fill="#333" />
           </React.Fragment>
         ))}
