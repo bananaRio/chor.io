@@ -37,8 +37,12 @@ function Landing() {
         const empty_routine = {
             routineName: "new routine",
             music_source_path: "",
-            dimensions: { x: 400, y: 200 },
+            dimensions: { x: 800, y: 400 },
+            defaultLength: 100,
             moves: [],
+            requirements: {},
+            requirementsDescriptions: {}
+            
         };
 
         setJsonData(empty_routine);

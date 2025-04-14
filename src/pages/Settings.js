@@ -2,29 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Settings() {
-    const [routine, setRoutine] = useState({
-        routineName: "",
-        music_source_path: "",
-        dimensions: { x: 800, y: 400 },
-        defaultLength: 100,
-        requirements: {},
-        requirementsDescriptions: {}
-    });
+    const [routine, setRoutine] = useState(JSON.parse(sessionStorage.getItem('uploadedJson')));
 
     const [musicFile, setMusicFile] = useState(null);
     const [defaultLength, setDefaultLength] = useState(100);
-    // const [fontSize, setFontSize] = useState("16px");
-    // const [bgMode, setBgMode] = useState("dark");
 
     const navigate = useNavigate();
     const loc = useLocation();
-
-    useEffect(() => {
-        const storedJson = sessionStorage.getItem("uploadedJson");
-        if (storedJson) {
-            setRoutine(JSON.parse(storedJson));
-        }
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -131,25 +115,6 @@ function Settings() {
                         value={defaultLength}
                         onChange={(e) => setDefaultLength(e.target.value)}
                     />
-
-                    {/* <label>Font Size: </label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={fontSize}
-                        onChange={(e) => setFontSize(e.target.value)}
-                    />
-
-                    <br />
-                    <label>Background Mode: </label>
-                    <select
-                        className="form-select"
-                        value={bgMode}
-                        onChange={(e) => setBgMode(e.target.value)}
-                    >
-                        <option value="dark">Dark</option>
-                        <option value="light">Light</option>
-                    </select> */}
                 </div>
             </div>
 
