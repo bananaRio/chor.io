@@ -7,25 +7,19 @@ import './Page.css';
 function Modify() {
   const navigate = useNavigate();
   const { id } = useParams();
-
   const [routineData, setRoutineData] = useState(null);
-  const [position, setPosition] = useState({ x: 400, y: 200 });
+  const [position, setPosition] = useState({ x: routineData.dimensions.x / 2, y: routineData.dimensions.y / 2 });
   const [time, setTime] = useState(0);
   const [name, setName] = useState("New Move");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState("#000000");
   const [checkedRequirements, setCheckedRequirements] = useState({});
-  const [userTimeInput, setUserTimeInput] = useState("00:00");
   const [connectorOffsets, setConnectorOffsets] = useState([]);
   const [musicFile, setMusicFile] = useState(null);
   const [musicDuration, setMusicDuration] = useState(180); // default fallback
   const playerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  useEffect(() => {
-    const formatted = `${String(Math.floor(time / 60)).padStart(2, "0")}:${String(time % 60).padStart(2, "0")}`;
-    setUserTimeInput(formatted);
-  }, [time]);
   useEffect(() => {
     const animate = () => {
       if (playerRef.current && !playerRef.current.paused) {
@@ -34,12 +28,12 @@ function Modify() {
         requestAnimationFrame(animate);
       }
     };
-  
+
     if (isPlaying) {
       requestAnimationFrame(animate);
     }
   }, [isPlaying]);
-  
+
   useEffect(() => {
     const storedData = JSON.parse(sessionStorage.getItem("uploadedJson")) || { moves: [] };
     setRoutineData(storedData);
@@ -77,20 +71,20 @@ function Modify() {
 
   const handleSave = () => {
     if (!routineData) return;
-  
+
     const updatedMoves = [...routineData.moves];
     if (id === "new" && name === "New Move") {
       alert("Error: Move name must not be 'New Move'.");
       return;
     }
-  
+
     // Check for startTime conflict
     const conflictingMove = routineData.moves.find((move, idx) => {
       const isSameTime = move.startTime === time;
       const isDifferentMove = id === "new" || parseInt(id) !== idx;
       return isSameTime && isDifferentMove;
     });
-  
+
     if (conflictingMove) {
       alert(
         `Error: Another move (${conflictingMove.name}) already starts at ${time.toFixed(
@@ -99,7 +93,7 @@ function Modify() {
       );
       return;
     }
-  
+
     const newMove = {
       name,
       startTime: time,
@@ -110,13 +104,13 @@ function Modify() {
         .map((key) => ({ requirement_name: key })),
       color
     };
-  
+
     if (id === "new") {
       updatedMoves.push(newMove);
     } else {
       updatedMoves[parseInt(id)] = newMove;
     }
-  
+
     updatedMoves.sort((a, b) => a.startTime - b.startTime);
     const updatedData = {
       ...routineData,
@@ -126,7 +120,7 @@ function Modify() {
     sessionStorage.setItem("uploadedJson", JSON.stringify(updatedData));
     navigate("/Overview");
   };
-  
+
 
   const handlePositionChange = (newPosition) => {
     setPosition(newPosition);
@@ -161,7 +155,7 @@ function Modify() {
             <button
               type="button"
               onClick={handleDelete}
-              style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", color: "#9CA3AF"}}
+              style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", color: "#9CA3AF" }}
             >
               Delete
               {/*<img src="./images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
@@ -189,11 +183,11 @@ function Modify() {
               onChange={(e) => setColor(e.target.value)}
             />
           </div>
-          <div className="mt-4 p-3 bg-light rounded">
-            <h4>Available Requirements</h4>
+          <div className="mt-4 p-3 bg-light rounded" style={{ background: "transparent" }}>
+            <h4>Routine Requirements Fulfilled</h4>
             {routineData?.requirements &&
               Object.keys(routineData.requirements).map((requirement, index) => (
-                <div key={index} className="form-check">
+                <div key={index} className="form-check" style={{ background: "transparent", color: "black" }}>
                   <input
                     type="checkbox"
                     className="form-check-input"
@@ -207,7 +201,7 @@ function Modify() {
                     }}
                   />
                   <label className="form-check-label" htmlFor={`requirement-${index}`}>
-                    {requirement}
+                    <b>{requirement}</b> -- {routineData.requirementsDescriptions[requirement]}
                   </label>
                 </div>
               ))}
@@ -228,6 +222,8 @@ function Modify() {
             isEditable={true}
             connectorOffsets={connectorOffsets}
             onConnectorOffsetsChange={setConnectorOffsets}
+            stageWidth={routineData.dimensions.x}
+            stageHeight={routineData.dimensions.y}
           />
           <div className="mt-2">
             <p>Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}</p>
@@ -243,9 +239,6 @@ function Modify() {
           currentTime={time}
           setCurrentTime={(newTime) => {
             setTime(newTime);
-            setUserTimeInput(
-              `${String(Math.floor(newTime / 60)).padStart(2, "0")}:${String(Math.floor(newTime % 60)).padStart(2, "0")}`
-            );
           }}
           currentMove={currentMove}
           editableOnly={true}

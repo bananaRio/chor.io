@@ -197,7 +197,7 @@ function Timeline({
           <div>
             <button onClick={handlePlay} disabled={isPlaying}>
               Play
-            </button>
+            </button> {/* TODO style */}
             <button onClick={handlePause} disabled={!isPlaying}>
               Pause
             </button>

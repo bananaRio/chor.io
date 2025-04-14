@@ -1,21 +1,32 @@
 {
-  "routineName":"test",
-  "music_source_path":"/",
-  "dimensions":{"x":0, "y":0},
-  "moves":[
+  "routineName": "test",
+  "music_source_path": "/",
+  "dimensions": {
+    "x": 0,
+    "y": 0
+  },
+  "moves": [
     {
-      "name":"move0",
-      "description":"description text",
-      "startTime":0,
-      "positions":{"x":0, "y":0},
+      "name": "move0",
+      "description": "description text",
+      "startTime": 0,
+      "positions": {
+        "x": 0,
+        "y": 0
+      },
       "requirements_filled": [
-        {"requirement_name":"text"}
+        {
+          "requirement_name": "unused"
+        }
       ],
-      "color":"gray"
+      "color": "gray"
     }
   ],
   "requirements": {
     "requirement_name": 1,
     "requirement_name_2": 3
+  },
+  "requirementsDescriptions": {
+    "requirement_name": "text"
   }
 }
