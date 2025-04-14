@@ -32,16 +32,7 @@ function Settings() {
         }
     };
 
-    const isValidFileName = (name) => {
-        const invalidChars = /[<>:"/\\|?*]/;
-        return name && name !== "new routine" && !invalidChars.test(name);
-    };
-
     const handleSaveAndProceed = () => {
-        if (!isValidFileName(routine.routineName)) {
-            alert("Invalid routine name. Please choose a valid name.");
-            return;
-        }
         sessionStorage.setItem("uploadedJson", JSON.stringify(routine));
         navigate("/Overview");
     };
@@ -54,13 +45,12 @@ function Settings() {
     return (
         <div style={{ display: "flex", flexDirection: "column", padding: "20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {/* Left Pane - Routine Settings */}
                 <button className="btn btn-secondary" type="button" onClick={handleBack}>
                     Back
                 </button>
                 <div style={{ width: "45%" }}>
                     <h2>Routine Settings</h2>
-                    <label>Routine Name:<span style={{ color: "red" }}>*</span></label>
+                    <label>Routine Name:</label>
                     <input
                         type="text"
                         className="form-control"
@@ -85,9 +75,9 @@ function Settings() {
                     )}
 
                     <br />
-                    <label>Dimensions:</label>
+                    <label>Floor Dimensions:</label>
                     <br />
-                    <label>X: </label>
+                    <label>Width:   </label>
                     <input
                         type="number"
                         className="form-control d-inline-block w-auto"
@@ -95,7 +85,7 @@ function Settings() {
                         value={routine.dimensions.x}
                         onChange={handleDimensionChange}
                     />
-                    <label> Y: </label>
+                    <label> Height:   </label>
                     <input
                         type="number"
                         className="form-control d-inline-block w-auto"
@@ -105,7 +95,6 @@ function Settings() {
                     />
                 </div>
 
-                {/* Right Pane - User-wide Settings */}
                 <div style={{ width: "45%" }}>
                     <h2>General Settings</h2>
                     <label>Default Routine Length (s): </label> {/* TODO: this doesn't set a global default, but a routine default */}

@@ -7,7 +7,7 @@ import './Page.css';
 function Modify() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [routineData, setRoutineData] = useState(null);
+  const [routineData, setRoutineData] = useState(JSON.parse(sessionStorage.getItem("uploadedJson")));
   const [position, setPosition] = useState({ x: routineData.dimensions.x / 2, y: routineData.dimensions.y / 2 });
   const [time, setTime] = useState(0);
   const [name, setName] = useState("New Move");

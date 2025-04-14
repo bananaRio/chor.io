@@ -35,7 +35,7 @@ function Landing() {
 
     const handleNew = () => {
         const empty_routine = {
-            routineName: "new routine",
+            routineName: "My Routine",
             music_source_path: "",
             dimensions: { x: 800, y: 400 },
             defaultLength: 100,
