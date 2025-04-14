@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/chor.io/static/css/main.a239c78c.css",
-    "main.js": "/chor.io/static/js/main.c2263fe8.js",
+    "main.js": "/chor.io/static/js/main.c9b35499.js",
     "static/js/453.9c343caf.chunk.js": "/chor.io/static/js/453.9c343caf.chunk.js",
     "static/media/dance_floor1.png": "/chor.io/static/media/dance_floor1.1fa599fbc4a9b831c011.png",
     "index.html": "/chor.io/index.html",
     "main.a239c78c.css.map": "/chor.io/static/css/main.a239c78c.css.map",
-    "main.c2263fe8.js.map": "/chor.io/static/js/main.c2263fe8.js.map",
+    "main.c9b35499.js.map": "/chor.io/static/js/main.c9b35499.js.map",
     "453.9c343caf.chunk.js.map": "/chor.io/static/js/453.9c343caf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a239c78c.css",
-    "static/js/main.c2263fe8.js"
+    "static/js/main.c9b35499.js"
   ]
 }
