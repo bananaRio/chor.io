@@ -9,6 +9,7 @@ function Modify() {
   const { id } = useParams();
 
   const [routineData, setRoutineData] = useState(null);
+  const [waitTime, setWaitTime] = useState(0);
   const [position, setPosition] = useState({ x: 400, y: 200 });
   const [time, setTime] = useState(0);
   const [name, setName] = useState("New Move");
@@ -23,21 +24,33 @@ function Modify() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    const formatted = `${String(Math.floor(time / 60)).padStart(2, "0")}:${String(time % 60).padStart(2, "0")}`;
+    const formatted = `${String(Math.floor(time / 60)).padStart(2, "0")}:${String(Math.floor(time % 60)).padStart(2, "0")}`;
     setUserTimeInput(formatted);
   }, [time]);
+  
+  // Animation loop for updating time during playback
   useEffect(() => {
+    let animationFrameId;
+    
     const animate = () => {
       if (playerRef.current && !playerRef.current.paused) {
-        const time = playerRef.current.currentTime;
-        setTime(time);
-        requestAnimationFrame(animate);
+        const currentTime = playerRef.current.currentTime;
+        setTime(currentTime);
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setIsPlaying(false);
       }
     };
-  
+    
     if (isPlaying) {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     }
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, [isPlaying]);
   
   useEffect(() => {
@@ -59,6 +72,7 @@ function Modify() {
       setTime(move.startTime);
       setPosition(move.positions);
       setColor(move.color);
+      setWaitTime(move.waitTime || 0);
 
       const checks = {};
       move.requirements_filled.forEach((req) => {
@@ -105,6 +119,7 @@ function Modify() {
       startTime: time,
       positions: position,
       description,
+      waitTime: waitTime,
       requirements_filled: Object.keys(checkedRequirements)
         .filter((key) => checkedRequirements[key])
         .map((key) => ({ requirement_name: key })),
@@ -127,7 +142,6 @@ function Modify() {
     navigate("/Overview");
   };
   
-
   const handlePositionChange = (newPosition) => {
     setPosition(newPosition);
   };
@@ -140,6 +154,30 @@ function Modify() {
 
   let savedMoves = routineData ? [...routineData.moves] : [];
   if (id !== "new") savedMoves.splice(parseInt(id), 1);
+  
+  // Play handler with music support
+  const handlePlay = () => {
+    if (isPlaying) return;
+    
+    if (playerRef.current) {
+      playerRef.current.currentTime = time;
+      playerRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(err => console.error("Audio play failed:", err));
+    } else {
+      setIsPlaying(true);
+    }
+  };
+  
+  // Pause handler
+  const handlePause = () => {
+    if (playerRef.current) {
+      playerRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
 
   return (
     <div className="container p-4">
@@ -188,6 +226,19 @@ function Modify() {
               value={color}
               onChange={(e) => setColor(e.target.value)}
             />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Wait Time (seconds)</label>
+            <input
+              type="number"
+              className="form-control"
+              min="0"
+              step="0.1"
+              value={waitTime}
+              onChange={(e) => setWaitTime(parseFloat(e.target.value) || 0)}
+              placeholder="How long to hold this position"
+            />
+            <small className="text-muted">Time the dancer stays in this position before moving to the next one</small>
           </div>
           <div className="mt-4 p-3 bg-light rounded">
             <h4>Available Requirements</h4>
@@ -259,28 +310,21 @@ function Modify() {
       <div className="mt-3">
         <p style={{ color: "white" }}>Current Time: {time.toFixed(2)} sec</p>
         <button
-          onClick={() => {
-            playerRef.current.currentTime = time;
-            playerRef.current.play();
-            setIsPlaying(true);
-          }}
+          onClick={handlePlay}
           disabled={isPlaying}
           style={{ marginRight: "8px" }}
         >
           Play
         </button>
         <button
-          onClick={() => {
-            playerRef.current.pause();
-            setIsPlaying(false);
-          }}
+          onClick={handlePause}
           disabled={!isPlaying}
         >
           Pause
         </button>
       </div>
 
-      {/* Hidden audio element */}
+      {/* Audio element */}
       {musicFile && (
         <audio
           ref={playerRef}
