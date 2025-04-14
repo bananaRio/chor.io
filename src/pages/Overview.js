@@ -2,36 +2,31 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ChoreographyMap from "../components/ChoreographyMap";
 import Timeline from "../components/Timeline";
-import './Page.css';
+import "./Page.css";
+import RequirementsSection from '../components/RequirementsSection';
 
 function Overview() {
-  const jsonData = JSON.parse(sessionStorage.getItem("uploadedJson"));
+  const [jsonData, setJsonData] = useState(
+    JSON.parse(sessionStorage.getItem("uploadedJson"))
+  );
+
   const navigate = useNavigate();
   const playerRef = useRef(null);
   const lastMoveRef = useRef(null);
 
-  const [musicFile, setMusicFile] = useState(null);
+  const [musicFile, setMusicFile] = useState(jsonData.defaultLength);
   const [musicDuration, setMusicDuration] = useState(0);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [editedDescription, setEditedDescription] = useState("");
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [selectedMoveIndex, setSelectedMoveIndex] = useState(null);
 
   const handleBack = () => navigate("/");
   const handleSettings = () => navigate("/Settings", { state: { new: false } });
   const handleModify = (moveId) => navigate(`/Modify/${moveId}`);
   const handleNewMove = () => navigate("/Modify/new");
 
-  const getFallbackDuration = () => {
-    if (!jsonData?.moves || jsonData.moves.length === 0) return 0;
-    const lastMove = jsonData.moves[jsonData.moves.length - 1];
-    return lastMove.startTime;
-  };
-
-  const duration = musicDuration || getFallbackDuration();
-
-  const getCurrentMove = () => {
+  const currentMoveFromTime = (() => {
     if (!jsonData?.moves || jsonData.moves.length === 0) return null;
     let current = null;
     for (const move of jsonData.moves) {
@@ -42,31 +37,32 @@ function Overview() {
       }
     }
     return current;
-  };
+  })();
 
-  const currentMove = getCurrentMove();
-
-  useEffect(() => {
-    if (jsonData?.music_source_path) {
-      setMusicFile(jsonData.music_source_path);
-    }
-  }, [jsonData]);
+  const currentEffectiveMove =
+    selectedMoveIndex !== null ? jsonData.moves[selectedMoveIndex] : currentMoveFromTime;
 
   useEffect(() => {
     if (
-      currentMove &&
-      (!lastMoveRef.current || lastMoveRef.current.name !== currentMove.name || lastMoveRef.current.startTime !== currentMove.startTime)
+      currentEffectiveMove &&
+      (!lastMoveRef.current ||
+        lastMoveRef.current.name !== currentEffectiveMove.name ||
+        lastMoveRef.current.startTime !== currentEffectiveMove.startTime)
     ) {
-      setEditedDescription(currentMove.description || "");
-      lastMoveRef.current = currentMove;
+      setEditedDescription(currentEffectiveMove.description || "");
+      lastMoveRef.current = currentEffectiveMove;
     }
-  }, [currentMove]);
+  }, [currentEffectiveMove]);
 
   const handleSaveDescription = () => {
-    if (!currentMove || !jsonData?.moves) return;
+    if (!currentEffectiveMove || !jsonData?.moves) return;
 
-    const updatedMoves = jsonData.moves.map(move => {
-      if (move.name === currentMove.name && move.startTime === currentMove.startTime) {
+    const updatedMoves = jsonData.moves.map((move, index) => {
+      if (
+        selectedMoveIndex !== null
+          ? index === selectedMoveIndex
+          : move.name === currentEffectiveMove.name && move.startTime === currentEffectiveMove.startTime
+      ) {
         return { ...move, description: editedDescription };
       }
       return move;
@@ -76,27 +72,16 @@ function Overview() {
       "uploadedJson",
       JSON.stringify({ ...jsonData, moves: updatedMoves })
     );
-    setIsEditingDescription(false);
   };
 
   return (
     <div style={{ display: "flex" }}>
-      {/* Left Pane */}
       <div style={{ width: "300px", padding: "10px", borderRight: "1px solid #ccc", overflowY: "auto" }}>
         <div style={{ marginBottom: "20px" }}>
           <button
-            className="botContentButton"
+            className="btn btn-success w-100"
             type="button"
             onClick={handleNewMove}
-            style={{
-              width: "100%",
-              padding: "10px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              fontSize: "16px",
-            }}
           >
             New Move
           </button>
@@ -107,11 +92,11 @@ function Overview() {
             {jsonData.moves.map((move, index) => (
               <li
                 key={index}
-                className="d-flex align-items-center p-2 mb-2"
-                style={{
-                  backgroundColor: "#f8f9fa",
-                  borderRadius: "10px",
-                  border: "1px solid #ddd",
+                className="d-flex align-items-center p-2 mb-2 bg-light rounded border"
+                style={{ cursor: "pointer" }}
+                onDoubleClick={() => {
+                  setSelectedMoveIndex(index);
+                  setEditedDescription(move.description || "");
                 }}
               >
                 <div
@@ -123,26 +108,13 @@ function Overview() {
                     marginRight: "10px",
                   }}
                 ></div>
-                <span className="flex-grow-1" style={{ color: "black" }}>
-                  {move.name}
-                </span>
+                <span className="flex-grow-1 text-dark">{move.name}</span>
                 <button
                   type="button"
                   onClick={() => handleModify(index)}
-                  className="btn btn-outline-secondary d-flex align-items-center"
-                  style={{
-                    padding: "5px 10px",
-                    borderRadius: "8px",
-                    backgroundColor: "white",
-                    color: "#9CA3AF"
-                  }}
+                  className="btn btn-outline-secondary btn-sm"
                 >
-                    Modify
-                  {/*<img
-                    src="./images/pencil.png"
-                    alt="Edit"
-                    style={{ width: "20px", height: "20px", marginRight: "5px" }}
-                  />*/}
+                  Modify
                 </button>
               </li>
             ))}
@@ -154,127 +126,99 @@ function Overview() {
 
       <div style={{ flex: 1, padding: "20px" }}>
         <div>
-          <h2>{jsonData.routineName}</h2>
+          <div className="row">
+            <div className="col">
+              <h2>{jsonData.routineName}</h2>
+            </div>
+            <button className="btn btn-secondary" type="button" onClick={handleBack}>
+              Landing Page
+            </button>
+            <button className="btn btn-primary" type="button" onClick={handleSettings}>
+              Settings
+            </button>
+          </div>
 
           <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
             <div style={{ flex: 2 }}>
               <h4>Position on Floor</h4>
-              <div className="border rounded" style={{
-                height: "400px",
-                padding: "0",
-                margin: "0",
-                border: "none",
-                background: "transparent",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}>
+              <div
+                style={{
+                  height: "400px", // ??? Alt is (jsonData.dimensions.y.toString()) + "px",
+                  background: "transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <ChoreographyMap
+                  duration={musicDuration}
                   moveList={jsonData?.moves}
                   isEditable={false}
                   connectorOffsets={jsonData.connectorOffsets || []}
+                  onMoveDoubleClick={(index) => {
+                    setSelectedMoveIndex(index);
+                    setEditedDescription(jsonData.moves[index].description || "");
+                  }}
+                  stageWidth={jsonData.dimensions.x}
+                  stageHeight={jsonData.dimensions.y}
                 />
-              </div>
-              <div className="mt-2">
-                <p>
-                  Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}
-                </p>
               </div>
             </div>
 
             <div style={{ flex: 1 }}>
               <h4>Current Move Details</h4>
-              {currentMove ? (
-                <div style={{
-                  backgroundColor: "#f8f9fa",
-                  padding: "15px",
-                  borderRadius: "8px",
-                  border: `2px solid ${currentMove.color || "#ddd"}`,
-                  height: "400px",
-                  display: "flex",
-                  flexDirection: "column"
-                }}>
-                  <h5 style={{ marginBottom: "10px", color: currentMove.color }}>
-                    {currentMove.name}
+              {currentEffectiveMove ? (
+                <div className="bg-light p-3 rounded border">
+                  <h5 className="mb-3" style={{ color: currentEffectiveMove.color }}>
+                    {currentEffectiveMove.name}
                   </h5>
-
+                  {/* ??? Can we leverage this for the move and routine names too? */}
                   <textarea
                     value={editedDescription}
                     onChange={(e) => setEditedDescription(e.target.value)}
-                    style={{
-                      flex: 1,
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "1px solid #ccc",
-                      marginBottom: "10px",
-                      resize: "none"
-                    }}
+                    className="form-control mb-3"
                     placeholder="Enter move description..."
+                    rows={3}
                   />
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <button
-                      onClick={handleSaveDescription}
-                      style={{
-                        padding: "8px 15px",
-                        backgroundColor: "#4CAF50",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px"
-                      }}
-                    >
-                      Save Changes
-                    </button>
-                  </div>
+                  <button className="btn btn-success" onClick={handleSaveDescription}>
+                    Save Changes
+                  </button>
                 </div>
               ) : (
-                <div style={{
-                  backgroundColor: "#f8f9fa",
-                  padding: "15px",
-                  borderRadius: "8px",
-                  border: "2px solid #ddd",
-                  height: "400px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}>
-                  <p>No move selected at current time</p>
+                <div className="bg-light p-3 rounded border d-flex align-items-center justify-content-center">
+                  No move selected at current time
                 </div>
               )}
+              <br />
+              <h4>Routine Requirements</h4>
+              <div className="bg-light p-3 rounded border">
+                <RequirementsSection jsonData={jsonData} setJsonData={setJsonData} id={"Overview"} />
+              </div>
             </div>
           </div>
 
           <Timeline
-            duration={duration}
+            duration={musicDuration}
             currentTime={currentTime}
             setCurrentTime={setCurrentTime}
-            currentMove={currentMove}
+            currentMove={currentEffectiveMove}
             playerRef={playerRef}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}
           />
 
-          <div style={{ marginTop: "20px" }}>
-            <button className="botContentButton" type="button" onClick={handleBack}>
-              Back
-            </button>
-            <button className="botContentButton" type="button" onClick={handleSettings}>
-              Settings
-            </button>
-          </div>
-
           {musicFile && (
-            <div style={{ display: "none" }}>
-              <audio
-                ref={playerRef}
-                controls
-                src={musicFile}
-                onLoadedMetadata={() => {
-                  if (playerRef.current?.duration) {
-                    setMusicDuration(playerRef.current.duration);
-                  }
-                }}
-              />
-            </div>
+            <audio
+              ref={playerRef}
+              controls
+              src={musicFile}
+              onLoadedMetadata={() => {
+                if (playerRef.current?.duration) {
+                  setMusicDuration(playerRef.current.duration); // TODO is it possible to move this to the upload section?
+                }
+              }}
+              style={{ display: "none" }}
+            />
           )}
         </div>
       </div>

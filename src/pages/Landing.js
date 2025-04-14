@@ -35,10 +35,14 @@ function Landing() {
 
     const handleNew = () => {
         const empty_routine = {
-            routineName: "new routine",
+            routineName: "My Routine",
             music_source_path: "",
-            dimensions: { x: 400, y: 200 },
+            dimensions: { x: 800, y: 400 },
+            defaultLength: 100,
             moves: [],
+            requirements: {},
+            requirementsDescriptions: {}
+            
         };
 
         setJsonData(empty_routine);
