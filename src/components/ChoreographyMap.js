@@ -6,24 +6,24 @@ import floor_img from "../images/dance_floor1.png";
 function ChoreographyMap({
   moveList = [],
   editableMove,
+  liveMarker, // New prop for the live playback indicator
   onEditableMoveChange,
   isEditable = true,
   connectorOffsets = [],
   onConnectorOffsetsChange = () => {},
-  // optional callback for double-clicking a move on the map
   onMoveDoubleClick = () => {}
 }) {
   const [mapBackground] = useImage(floor_img);
   const stageWidth = 800;
   const stageHeight = 400;
 
-  // combine saved moves and, if editing, the editable move.
+  // Combine static moves with the editable move (if in editing mode)
   const markers = [...moveList];
   if (editableMove && isEditable) {
     markers.push(editableMove);
   }
 
-  // ensure connectorOffsets array always has length equal to markers.length - 1.
+  // Ensure connectorOffsets array has the required length.
   useEffect(() => {
     const requiredLength = Math.max(markers.length - 1, 0);
     if (connectorOffsets.length !== requiredLength) {
@@ -35,11 +35,11 @@ function ChoreographyMap({
     }
   }, [markers.length, connectorOffsets, onConnectorOffsetsChange]);
 
-  // helper functions to get marker coordinates.
-  const getX = (marker) => marker.positions ? marker.positions.x : marker.x;
-  const getY = (marker) => marker.positions ? marker.positions.y : marker.y;
+  // Helper functions to safely obtain coordinates.
+  const getX = (marker) => (marker.positions ? marker.positions.x : marker.x);
+  const getY = (marker) => (marker.positions ? marker.positions.y : marker.y);
 
-  // draw curved connectors between markers.
+  // Draw curved connectors between markers.
   const generateConnectors = () => {
     if (markers.length < 2) return null;
     return markers.slice(0, -1).map((marker, index) => {
@@ -72,7 +72,7 @@ function ChoreographyMap({
     });
   };
 
-  // render control hotspots ONLY if in editing mode.
+  // Render control hotspots only if editing is enabled.
   const renderControlHotspots = () => {
     if (!isEditable || markers.length < 2) return null;
     return markers.slice(0, -1).map((marker, index) => {
@@ -90,7 +90,7 @@ function ChoreographyMap({
           y={controlPoint.y}
           radius={7}
           fill="blue"
-          opacity={0} // Invisible by default.
+          opacity={0}
           draggable={isEditable}
           onMouseEnter={(e) => {
             e.target.opacity(0.6);
@@ -113,27 +113,37 @@ function ChoreographyMap({
   };
 
   return (
-    <Stage width={stageWidth} height={stageHeight} style={{ border: "1px solid #ccc", background: "#eee" }}>
+    <Stage
+      width={stageWidth}
+      height={stageHeight}
+      style={{ border: "1px solid #ccc", background: "#eee" }}
+    >
       <Layer>
         {mapBackground && (
           <Image image={mapBackground} x={0} y={0} width={stageWidth} height={stageHeight} />
         )}
         {generateConnectors()}
         {renderControlHotspots()}
-        {/* render saved moves (non-editable) with double-click functionality */}
-        {moveList.map((move, index) => (
+        {/* Render static moves using safe helper functions */}
+        {markers.map((move, index) => (
           <React.Fragment key={move.name + index}>
-            <Circle 
-              x={move.positions.x} 
-              y={move.positions.y} 
-              radius={20} 
+            <Circle
+              x={getX(move)}
+              y={getY(move)}
+              radius={20}
               fill={move.color}
               onDblClick={(e) => onMoveDoubleClick(index)}
             />
-            <Text x={move.positions.x + 25} y={move.positions.y - 10} text={move.name} fontSize={16} fill="#333" />
+            <Text
+              x={getX(move) + 25}
+              y={getY(move) - 10}
+              text={move.name}
+              fontSize={16}
+              fill="#333"
+            />
           </React.Fragment>
         ))}
-        {/* render the editable move if provided */}
+        {/* Render the editable move if provided */}
         {editableMove && (
           <React.Fragment>
             <Circle
@@ -159,6 +169,10 @@ function ChoreographyMap({
               fill="#333"
             />
           </React.Fragment>
+        )}
+        {/* Render the live playback marker if provided */}
+        {liveMarker && (
+          <Circle x={liveMarker.x} y={liveMarker.y} radius={20} fill={liveMarker.color} />
         )}
       </Layer>
     </Stage>
