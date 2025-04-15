@@ -586,7 +586,7 @@ function Overview() {
               disabled={isPlaying}
               style={{ marginRight: "8px" }}
             >
-              <img src="./images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
+              <img src="./images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} /> {/* TODO: find images */}
             </button>
             <button
               className="botContentButton"

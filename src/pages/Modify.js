@@ -186,23 +186,23 @@ function Modify() {
     <div className="container p-4">
       <header className="d-flex justify-content-between align-items-center bg-light p-2 rounded">
         <h4>Modify</h4>
-        <div>
+        <div style={{background:"transparent"}}>
           <button className="btn btn-secondary me-2" onClick={() => navigate("/Overview")}>
             Discard Changes
           </button>
           <button
-            type="button"
+            className="btn btn-primary me-2"
             onClick={handleSave}
-            style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", marginRight: "5px", color: "#9CA3AF" }}
+            style={{border: "none", cursor: "pointer"}}
           >
             Save
             {/*<img src="./images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} />*/}
           </button>
           {id !== "new" && (
             <button
-              type="button"
+              className="btn btn-danger me-2"
               onClick={handleDelete}
-              style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", color: "#9CA3AF" }}
+              style={{ border: "none", cursor: "pointer"}}
             >
               Delete
               {/*<img src="./images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
@@ -306,12 +306,16 @@ function Modify() {
           isPlaying={isPlaying}
           setIsPlaying={setIsPlaying}
         />
+        <br/>
+        <p style={{ color: "black" }}>Current Time: {time.toFixed(2)} sec</p>
       </div>
 
+      
       {/* External controls */}
-      <div className="mt-3">
-        <p style={{ color: "white" }}>Current Time: {time.toFixed(2)} sec</p>
+      {/* <div className="mt-3">
+        
         <button
+          className="btn"
           onClick={handlePlay}
           disabled={isPlaying}
           style={{ marginRight: "8px" }}
@@ -324,7 +328,7 @@ function Modify() {
         >
           Pause
         </button>
-      </div>
+      </div> */}
 
       {/* Hidden audio element */}
       {musicFile && (
