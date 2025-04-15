@@ -226,15 +226,18 @@ function Review() {
 
   useEffect(() => {
     let animationFrameId;
+    let lastUpdate = 0;
     const animate = () => {
-      if (playerRef.current && !playerRef.current.paused) {
-        const time = playerRef.current.currentTime;
-        setCurrentTime(time);
+    if (playerRef.current && !playerRef.current.paused) {
+        const now = Date.now();
+        if (now - lastUpdate > 100) {  // update every 100ms
+        setCurrentTime(playerRef.current.currentTime);
+        lastUpdate = now;
+        }
         animationFrameId = requestAnimationFrame(animate);
-      } else {
-        cancelAnimationFrame(animationFrameId);
-      }
+    }
     };
+
 
     if (isPlaybackActive && musicFile && playerRef.current) {
       animationFrameId = requestAnimationFrame(animate);
@@ -312,6 +315,7 @@ function Review() {
 
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     <video
+                        preload="none"
                         ref={videoRef}
                         style={{
                             width: "108%",
@@ -323,7 +327,11 @@ function Review() {
                             marginLeft: "-40px",
                             pointerEvents: "none"
                         }}
-                        
+                        onLoadedMetadata={() => {
+                            if (playerRef.current?.duration) {
+                              setMusicDuration(playerRef.current.duration); // TODO is it possible to move this to the upload section?
+                            }
+                          }}
                         src={musicFile} // replace with your video source
                     >
                     </video>
@@ -378,20 +386,6 @@ function Review() {
               <img src="./images/end.png" alt="End" style={{ width: "30px", height: "30px" }} />
             </button>
           </div>
-
-          {musicFile && (
-            <audio
-              ref={playerRef}
-              controls
-              src={musicFile}
-              onLoadedMetadata={() => {
-                if (playerRef.current?.duration) {
-                  setMusicDuration(playerRef.current.duration); // TODO is it possible to move this to the upload section?
-                }
-              }}
-              style={{ display: "none" }}
-            />
-          )}
         </div>
       </div>
     </div>
