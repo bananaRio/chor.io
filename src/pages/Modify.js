@@ -159,28 +159,28 @@ function Modify() {
   let savedMoves = routineData ? [...routineData.moves] : [];
   if (id !== "new") savedMoves.splice(parseInt(id), 1);
 
-  const handlePlay = () => {
-    if (isPlaying) return;
+  // const handlePlay = () => {
+  //   if (isPlaying) return;
     
-    if (playerRef.current) {
-      playerRef.current.currentTime = time;
-      playerRef.current.play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch(err => console.error("Audio play failed:", err));
-    } else {
-      setIsPlaying(true);
-    }
-  };
+  //   if (playerRef.current) {
+  //     playerRef.current.currentTime = time;
+  //     playerRef.current.play()
+  //       .then(() => {
+  //         setIsPlaying(true);
+  //       })
+  //       .catch(err => console.error("Audio play failed:", err));
+  //   } else {
+  //     setIsPlaying(true);
+  //   }
+  // };
   
   // Pause handler
-  const handlePause = () => {
-    if (playerRef.current) {
-      playerRef.current.pause();
-    }
-    setIsPlaying(false);
-  };
+  // const handlePause = () => {
+  //   if (playerRef.current) {
+  //     playerRef.current.pause();
+  //   }
+  //   setIsPlaying(false);
+  // };
 
   return (
     <div className="container p-4">

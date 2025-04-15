@@ -12,23 +12,23 @@ function Timeline({
   hideControls = false
 }) {
   const sliderRef = useRef(null);
-  const [sliderWidth, setSliderWidth] = useState(0);
+  // const [sliderWidth, setSliderWidth] = useState(0);
   const animationFrameRef = useRef(null);
   const [internalTime, setInternalTime] = useState(currentTime);
   const [hasConflict, setHasConflict] = useState(false);
   const [moveSegments, setMoveSegments] = useState([]);
 
-  const updateSliderWidth = () => {
-    if (sliderRef.current) {
-      setSliderWidth(sliderRef.current.offsetWidth);
-    }
-  };
+  // const updateSliderWidth = () => {
+  //   if (sliderRef.current) {
+  //     setSliderWidth(sliderRef.current.offsetWidth);
+  //   }
+  // };
 
-  useEffect(() => {
-    updateSliderWidth();
-    window.addEventListener("resize", updateSliderWidth);
-    return () => window.removeEventListener("resize", updateSliderWidth);
-  }, []);
+  // useEffect(() => {
+  //   updateSliderWidth();
+  //   window.addEventListener("resize", updateSliderWidth);
+  //   return () => window.removeEventListener("resize", updateSliderWidth);
+  // }, []);
 
   useEffect(() => {
     setInternalTime(currentTime);
@@ -65,7 +65,7 @@ function Timeline({
   const getLabelLeftOffset = () => {
     if (!sliderRef.current || !duration) return 0;
     const slider = sliderRef.current;
-    const rect = slider.getBoundingClientRect();
+    // const rect = slider.getBoundingClientRect();
     const percent = internalTime / duration;
     const thumbX = percent * slider.clientWidth;
     return thumbX;
