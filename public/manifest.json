@@ -26,7 +26,23 @@
       "src": "./images/trash.png",
       "sizes": "700x700",
       "type": "image/png"
+    },
+    {
+      "src": "./images/pause.png",
+      "sizes": "700x700",
+      "type": "image/png"
+    },
+    {
+      "src": "./images/play.png",
+      "sizes": "700x700",
+      "type": "image/png"
+    },
+    {
+      "src": "./images/stop.png",
+      "sizes": "700x700",
+      "type": "image/png"
     }
+    
   ],
   "start_url": ".",
   "display": "standalone",

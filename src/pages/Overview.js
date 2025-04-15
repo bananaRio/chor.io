@@ -409,7 +409,7 @@ function Overview() {
               disabled={isPlaying}
               style={{ marginRight: "8px" }}
             >
-              <img src="./images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} /> {/* TODO: find images */}
+              <img src="chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} /> {/* TODO: find images */}
             </button>
             <button
               className="botContentButton"
@@ -417,14 +417,14 @@ function Overview() {
               disabled={!isPlaybackActive}
               style={{ marginRight: "8px" }}
             >
-              <img src="./images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
+              <img src="chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
               className="botContentButton"
               onClick={handleEnd}
               disabled={!isPlaybackActive}
             >
-              <img src="./images/end.png" alt="End" style={{ width: "30px", height: "30px" }} />
+              <img src="chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
             </button>
           </div>
 
