@@ -303,8 +303,6 @@ function Modify() {
           setSelectedMoveIndex={() => {}}  // Empty function since we don't need move selection in modify mode
           playerRef={playerRef}
         />
-        <br/>
-        <p style={{ color: "black" }}>Current Time: {time.toFixed(2)} sec</p>
       </div>
 
       
