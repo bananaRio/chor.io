@@ -26,6 +26,8 @@ function Overview() {
 
   const handleBack = () => navigate("/");
   const handleSettings = () => navigate("/Settings", { state: { new: false } });
+  const handleReview = () => navigate("/Review", { state: { new: false } });
+
   const handleModify = (moveId) => navigate(`/Modify/${moveId}`);
   const handleNewMove = () => navigate("/Modify/new");
 
@@ -308,6 +310,9 @@ function Overview() {
             <div className="col">
               <h2>{jsonData.routineName}</h2>
             </div>
+            <button className="btn btn-primary" type="button" onClick={handleReview}>
+              Review
+            </button>
             <button className="btn btn-secondary" type="button" onClick={handleBack}>
               Landing Page
             </button>
