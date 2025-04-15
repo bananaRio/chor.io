@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import ChoreographyMap from "../components/ChoreographyMap";
 import Timeline from "../components/Timeline";
 import "./Page.css";
-import RequirementsSection from '../components/RequirementsSection';
 
 function Review() {
   const [jsonData, setJsonData] = useState(
@@ -17,58 +16,32 @@ function Review() {
 
   const [musicFile, setMusicFile] = useState(null);
   const [musicDuration, setMusicDuration] = useState(180);
-  
+
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [editedDescription, setEditedDescription] = useState("");
   const [selectedMoveIndex, setSelectedMoveIndex] = useState(null);
 
   const [isPlaybackActive, setIsPlaybackActive] = useState(false);
 
   const handleBack = () => navigate("/Overview");
   const handleExport = () => navigate("/", { state: { new: false } });
-  const handleReview = () => navigate("/Review", { state: { new: false } });
-
-  const handleModify = (moveId) => navigate(`/Modify/${moveId}`);
-  const handleNewMove = () => navigate("/Modify/new");
 
   useEffect(() => {
     const syncOnFocus = () => {
       const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
       setJsonData(latestJson);
     };
-  
+
     window.addEventListener("focus", syncOnFocus);
     return () => window.removeEventListener("focus", syncOnFocus);
   }, []);
 
-  useEffect(() =>{
+  useEffect(() => {
     if (!!musicFile) {
       setMusicDuration(jsonData.defaultLength);
-    } 
+    }
   }, [musicFile, jsonData]);
 
-  const adjustColor = (color, factor) => {
-    if (!color || color === "#666") return color;
-
-    // Convert hex to RGB
-    let r = parseInt(color.substring(1, 3), 16);
-    let g = parseInt(color.substring(3, 5), 16);
-    let b = parseInt(color.substring(5, 7), 16);
-
-    // Lighten or darken
-    r = Math.round(r * factor);
-    g = Math.round(g * factor);
-    b = Math.round(b * factor);
-
-    // Ensure values are in valid range
-    r = Math.min(255, Math.max(0, r));
-    g = Math.min(255, Math.max(0, g));
-    b = Math.min(255, Math.max(0, b));
-
-    // Convert back to hex
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-  };
 
   useEffect(() => {
     if (jsonData?.music_source_path) {
@@ -99,30 +72,10 @@ function Review() {
         lastMoveRef.current.name !== currentEffectiveMove.name ||
         lastMoveRef.current.startTime !== currentEffectiveMove.startTime)
     ) {
-      setEditedDescription(currentEffectiveMove.description || "");
+      // setEditedDescription(currentEffectiveMove.description || "");
       lastMoveRef.current = currentEffectiveMove;
     }
   }, [currentEffectiveMove]);
-
-  const handleSaveDescription = () => {
-    if (!currentEffectiveMove || !jsonData?.moves) return;
-
-    const updatedMoves = jsonData.moves.map((move, index) => {
-      if (
-        selectedMoveIndex !== null
-          ? index === selectedMoveIndex
-          : move.name === currentEffectiveMove.name && move.startTime === currentEffectiveMove.startTime
-      ) {
-        return { ...move, description: editedDescription };
-      }
-      return move;
-    });
-
-    sessionStorage.setItem(
-      "uploadedJson",
-      JSON.stringify({ ...jsonData, moves: updatedMoves })
-    );
-  };
 
   const computeLiveMarker = () => {
     if (!jsonData?.moves || jsonData.moves.length === 0) return null;
@@ -187,18 +140,18 @@ function Review() {
   const handlePlay = () => {
     setIsPlaying(true);
     setIsPlaybackActive(true);
-  
+
     if (playerRef.current) {
       playerRef.current.currentTime = currentTime;
       playerRef.current.play().catch(console.error);
     }
-  
+
     if (videoRef.current) {
       videoRef.current.currentTime = currentTime;
       videoRef.current.play().catch(console.error);
     }
   };
-  
+
 
   const handleStop = () => {
     if (playerRef.current) playerRef.current.pause();
@@ -206,7 +159,7 @@ function Review() {
     setIsPlaying(false);
     setIsPlaybackActive(false);
   };
-  
+
 
   const handleEnd = () => {
     if (playerRef.current) playerRef.current.pause();
@@ -221,21 +174,21 @@ function Review() {
     if (playerRef.current) playerRef.current.currentTime = time;
     if (videoRef.current) videoRef.current.currentTime = time;
   };
-  
-  
+
+
 
   useEffect(() => {
     let animationFrameId;
     let lastUpdate = 0;
     const animate = () => {
-    if (playerRef.current && !playerRef.current.paused) {
+      if (playerRef.current && !playerRef.current.paused) {
         const now = Date.now();
         if (now - lastUpdate > 100) {  // update every 100ms
-        setCurrentTime(playerRef.current.currentTime);
-        lastUpdate = now;
+          setCurrentTime(playerRef.current.currentTime);
+          lastUpdate = now;
         }
         animationFrameId = requestAnimationFrame(animate);
-    }
+      }
     };
 
 
@@ -289,55 +242,55 @@ function Review() {
 
           <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
             {/* Left: Choreography Map */}
-                <div style={{ flex: 1.5 }}>
-                    <h4>Position on Floor</h4>
-                    <div
-                    style={{
-                        height: "400px",
-                        background: "transparent",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-start",
-                        paddingLeft: "20px"
-                    }}
-                    >
-                    <ChoreographyMap
-                        duration={musicDuration}
-                        moveList={isPlaybackActive ? [] : jsonData?.moves}
-                        isEditable={false}
-                        connectorOffsets={jsonData.connectorOffsets || []}
-                        liveMarker={liveMarker}
-                        stageWidth={jsonData.dimensions.x}
-                        stageHeight={jsonData.dimensions.y}
-                    />
-                </div>
+            <div style={{ flex: 1.5 }}>
+              <h4>Position on Floor</h4>
+              <div
+                style={{
+                  height: "400px",
+                  background: "transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  paddingLeft: "20px"
+                }}
+              >
+                <ChoreographyMap
+                  duration={musicDuration}
+                  moveList={isPlaybackActive ? [] : jsonData?.moves}
+                  isEditable={false}
+                  connectorOffsets={jsonData.connectorOffsets || []}
+                  liveMarker={liveMarker}
+                  stageWidth={jsonData.dimensions.x}
+                  stageHeight={jsonData.dimensions.y}
+                />
+              </div>
             </div>
 
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                    <video
-                        preload="none"
-                        ref={videoRef}
-                        style={{
-                            width: "108%",
-                            height: "225%",
-                            objectFit: "cover", // fills container without distortion
-                            borderRadius: "10px",
-                            backgroundColor: "#000",
-                            marginTop: "40px",
-                            marginLeft: "-40px",
-                            pointerEvents: "none"
-                        }}
-                        onLoadedMetadata={() => {
-                            if (playerRef.current?.duration) {
-                              setMusicDuration(playerRef.current.duration); // TODO is it possible to move this to the upload section?
-                            }
-                          }}
-                        src={musicFile} // replace with your video source
-                    >
-                    </video>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <video
+                preload="none"
+                ref={videoRef}
+                style={{
+                  width: "108%",
+                  height: "225%",
+                  objectFit: "cover",
+                  borderRadius: "10px",
+                  backgroundColor: "#000",
+                  marginTop: "40px",
+                  marginLeft: "-40px",
+                  pointerEvents: "none"
+                }}
+                onLoadedMetadata={() => {
+                  if (playerRef.current?.duration) {
+                    setMusicDuration(playerRef.current.duration);
+                  }
+                }}
+                src={musicFile}
+              >
+              </video>
 
-                </div>
             </div>
+          </div>
 
 
           <div style={{
@@ -368,7 +321,7 @@ function Review() {
               disabled={isPlaying}
               style={{ marginRight: "8px" }}
             >
-              <img src="chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} /> {/* TODO: find images */}
+              <img src="chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
               className="botContentButton"

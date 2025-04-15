@@ -12,10 +12,10 @@ function Settings() {
 
     useEffect(() => {
         const syncOnFocus = () => {
-          const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
-          setRoutine(latestJson);
+            const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
+            setRoutine(latestJson);
         };
-      
+
         window.addEventListener("focus", syncOnFocus);
         return () => window.removeEventListener("focus", syncOnFocus);
     }, []);
@@ -114,7 +114,7 @@ function Settings() {
 
                 <div style={{ width: "45%" }}>
                     <h2>{/* General Settings*/} &#x200b;</h2> {/* Don't worry about the wizardry */}
-                    <label>Default Routine Length (s): </label> {/* TODO: this doesn't set a global default, but a routine default */}
+                    <label>Default Routine Length (s): </label>
                     <input
                         type="text"
                         className="form-control"
@@ -124,9 +124,7 @@ function Settings() {
                 </div>
             </div>
 
-            {/* Save & Proceed Button */}
             <br />
-
             <button className="btn btn-primary" type="button" onClick={handleSaveAndProceed}>
                 Save & Proceed to Overview
             </button>

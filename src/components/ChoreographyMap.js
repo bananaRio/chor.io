@@ -6,7 +6,7 @@ import floor_img from "../images/dance_floor1.png";
 function ChoreographyMap({
   moveList = [],
   editableMove,
-  liveMarker, // Live playback indicator
+  liveMarker,
   onEditableMoveChange,
   isEditable = true,
   connectorOffsets = [],
@@ -128,7 +128,7 @@ function ChoreographyMap({
         {generateConnectors()}
         {renderControlHotspots()}
 
-        {/* Render saved moves */}
+        {/* Saved moves */}
         {moveList.map((move, index) => (
           <React.Fragment key={`move-${index}`}>
             <Circle
@@ -140,17 +140,10 @@ function ChoreographyMap({
               strokeWidth={1}
               onDblClick={() => onMoveDoubleClick(index)}
             />
-            {/* <Text
-              x={getX(move) + 12}
-              y={getY(move) - 8}
-              text={move.name}
-              fontSize={14}
-              fill="#333"
-            /> */}
           </React.Fragment>
         ))}
 
-        {/* Render editable move */}
+        {/* Editable moves */}
         {editableMove && isEditable && (
           <React.Fragment>
             <Circle
@@ -171,17 +164,10 @@ function ChoreographyMap({
                 onEditableMoveChange?.(newPos);
               }}
             />
-            {/* <Text
-              x={getX(editableMove) + 14}
-              y={getY(editableMove) - 8}
-              text={editableMove.note || editableMove.id}
-              fontSize={14}
-              fill="#333"
-            /> */}
           </React.Fragment>
         )}
 
-        {/* Render live playback marker */}
+        {/* Live playback marker */}
         {liveMarker && (
           <Circle
             x={liveMarker.x}

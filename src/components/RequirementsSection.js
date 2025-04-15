@@ -25,7 +25,7 @@ function RequirementsSection({ jsonData, setJsonData }) {
 
   const handleSaveEdit = (oldName) => {
     const newRequirements = { ...jsonData.requirements };
-    // If name changed, delete old and add new
+
     if (oldName !== editFields.name) {
       delete newRequirements[oldName];
     }

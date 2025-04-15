@@ -26,15 +26,15 @@ function Modify() {
       const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
       setRoutineData(latestJson);
     };
-  
+
     window.addEventListener("focus", syncOnFocus);
     return () => window.removeEventListener("focus", syncOnFocus);
   }, []);
-  
+
 
   useEffect(() => {
     let animationFrameId;
-    
+
     const animate = () => {
       if (playerRef.current && !playerRef.current.paused) {
         const currentTime = playerRef.current.currentTime;
@@ -44,11 +44,11 @@ function Modify() {
         setIsPlaying(false);
       }
     };
-    
+
     if (isPlaying) {
       animationFrameId = requestAnimationFrame(animate);
     }
-    
+
     return () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
@@ -159,50 +159,27 @@ function Modify() {
   let savedMoves = routineData ? [...routineData.moves] : [];
   if (id !== "new") savedMoves.splice(parseInt(id), 1);
 
-  // const handlePlay = () => {
-  //   if (isPlaying) return;
-    
-  //   if (playerRef.current) {
-  //     playerRef.current.currentTime = time;
-  //     playerRef.current.play()
-  //       .then(() => {
-  //         setIsPlaying(true);
-  //       })
-  //       .catch(err => console.error("Audio play failed:", err));
-  //   } else {
-  //     setIsPlaying(true);
-  //   }
-  // };
-  
-  // Pause handler
-  // const handlePause = () => {
-  //   if (playerRef.current) {
-  //     playerRef.current.pause();
-  //   }
-  //   setIsPlaying(false);
-  // };
-
   return (
     <div className="container p-4">
       <header className="d-flex justify-content-between align-items-center bg-light p-2 rounded">
         <h4>Modify</h4>
-        <div style={{background:"transparent"}}>
+        <div style={{ background: "transparent" }}>
           <button className="btn btn-secondary me-2" onClick={() => navigate("/Overview")}>
             Discard Changes
           </button>
           <button
             className="btn btn-primary me-2"
             onClick={handleSave}
-            style={{border: "none", cursor: "pointer"}}
+            style={{ border: "none", cursor: "pointer" }}
           >
             Save
-            {/*<img src="./images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} />*/}
+            {/*<img src="./images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} /> // ???*/}
           </button>
           {id !== "new" && (
             <button
               className="btn btn-danger me-2"
               onClick={handleDelete}
-              style={{ border: "none", cursor: "pointer"}}
+              style={{ border: "none", cursor: "pointer" }}
             >
               Delete
               {/*<img src="./images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
@@ -231,18 +208,18 @@ function Modify() {
             />
           </div>
           <div className="mb-3">
-             <label className="form-label">Wait Time (seconds)</label>
-             <input
-               type="number"
-               className="form-control"
-               min="0"
-               step="0.1"
-               value={waitTime}
-               onChange={(e) => setWaitTime(parseFloat(e.target.value) || 0)}
-               placeholder="How long to hold this position"
-             />
-             <small className="text-muted">Time the dancer stays in this position before moving to the next one</small>
-           </div>
+            <label className="form-label">Wait Time (seconds)</label>
+            <input
+              type="number"
+              className="form-control"
+              min="0"
+              step="0.1"
+              value={waitTime}
+              onChange={(e) => setWaitTime(parseFloat(e.target.value) || 0)}
+              placeholder="How long to hold this position"
+            />
+            <small className="text-muted">Time the dancer stays in this position before moving to the next one</small>
+          </div>
           <div className="mt-4 p-3 bg-light rounded" style={{ background: "transparent" }}>
             <h4>Routine Requirements Fulfilled</h4>
             {routineData?.requirements &&
@@ -291,7 +268,7 @@ function Modify() {
         </div>
       </div>
 
-      {/* White box for slider only */}
+      {/* Timeline and its white box*/}
       <div className="mt-4 p-3 bg-light rounded">
         <h4>Time Selection</h4>
         <Timeline
@@ -300,32 +277,12 @@ function Modify() {
           moves={routineData?.moves || []}  // Pass just the moves array
           currentEffectiveMove={currentMove}  // Pass the current move being edited
           setCurrentTime={setTime}
-          setSelectedMoveIndex={() => {}}  // Empty function since we don't need move selection in modify mode
+          setSelectedMoveIndex={() => { }}  // Empty function since we don't need move selection in modify mode
           playerRef={playerRef}
         />
       </div>
 
-      
-      {/* External controls */}
-      {/* <div className="mt-3">
-        
-        <button
-          className="btn"
-          onClick={handlePlay}
-          disabled={isPlaying}
-          style={{ marginRight: "8px" }}
-        >
-          Play
-        </button>
-        <button
-          onClick={handlePause}
-          disabled={!isPlaying}
-        >
-          Pause
-        </button>
-      </div> */}
-
-      {/* Hidden audio element */}
+      {/* Audio */}
       {musicFile && (
         <audio
           ref={playerRef}
