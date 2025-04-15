@@ -295,16 +295,13 @@ function Modify() {
       <div className="mt-4 p-3 bg-light rounded">
         <h4>Time Selection</h4>
         <Timeline
-          duration={musicDuration}
+          musicDuration={musicDuration}
           currentTime={time}
-          setCurrentTime={(newTime) => {
-            setTime(newTime);
-          }}
-          currentMove={currentMove}
-          editableOnly={true}
+          moves={routineData?.moves || []}  // Pass just the moves array
+          currentEffectiveMove={currentMove}  // Pass the current move being edited
+          setCurrentTime={setTime}
+          setSelectedMoveIndex={() => {}}  // Empty function since we don't need move selection in modify mode
           playerRef={playerRef}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
         />
         <br/>
         <p style={{ color: "black" }}>Current Time: {time.toFixed(2)} sec</p>
