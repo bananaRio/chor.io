@@ -8,7 +8,8 @@ function Timeline({
   playerRef,
   isPlaying,
   setIsPlaying,
-  editableOnly = false
+  editableOnly = false,
+  hideControls = false
 }) {
   const sliderRef = useRef(null);
   const [sliderWidth, setSliderWidth] = useState(0);
@@ -189,7 +190,7 @@ function Timeline({
         />
       </div>
 
-      {!editableOnly && (
+      {!editableOnly && !hideControls && (
         <div style={{ marginTop: "16px" }}>
           <p style={{ marginBottom: "8px" }}>
             Current Time: {internalTime.toFixed(2)} sec

@@ -8,6 +8,7 @@ function Modify() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [routineData, setRoutineData] = useState(JSON.parse(sessionStorage.getItem("uploadedJson")));
+  const [waitTime, setWaitTime] = useState(0);
   const [position, setPosition] = useState({ x: routineData.dimensions.x / 2, y: routineData.dimensions.y / 2 });
   const [time, setTime] = useState(0);
   const [name, setName] = useState("New Move");
@@ -16,22 +17,43 @@ function Modify() {
   const [checkedRequirements, setCheckedRequirements] = useState({});
   const [connectorOffsets, setConnectorOffsets] = useState([]);
   const [musicFile, setMusicFile] = useState(null);
-  const [musicDuration, setMusicDuration] = useState(180); // default fallback
+  const [musicDuration, setMusicDuration] = useState(routineData.defaultLength); // default fallback
   const playerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
+    const syncOnFocus = () => {
+      const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
+      setRoutineData(latestJson);
+    };
+  
+    window.addEventListener("focus", syncOnFocus);
+    return () => window.removeEventListener("focus", syncOnFocus);
+  }, []);
+  
+
+  useEffect(() => {
+    let animationFrameId;
+    
     const animate = () => {
       if (playerRef.current && !playerRef.current.paused) {
-        const time = playerRef.current.currentTime;
-        setTime(time);
-        requestAnimationFrame(animate);
+        const currentTime = playerRef.current.currentTime;
+        setTime(currentTime);
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setIsPlaying(false);
       }
     };
-
+    
     if (isPlaying) {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     }
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, [isPlaying]);
 
   useEffect(() => {
@@ -53,6 +75,7 @@ function Modify() {
       setTime(move.startTime);
       setPosition(move.positions);
       setColor(move.color);
+      setWaitTime(move.waitTime || 0);
 
       const checks = {};
       move.requirements_filled.forEach((req) => {
@@ -99,6 +122,7 @@ function Modify() {
       startTime: time,
       positions: position,
       description,
+      waitTime: waitTime,
       requirements_filled: Object.keys(checkedRequirements)
         .filter((key) => checkedRequirements[key])
         .map((key) => ({ requirement_name: key })),
@@ -134,6 +158,29 @@ function Modify() {
 
   let savedMoves = routineData ? [...routineData.moves] : [];
   if (id !== "new") savedMoves.splice(parseInt(id), 1);
+
+  const handlePlay = () => {
+    if (isPlaying) return;
+    
+    if (playerRef.current) {
+      playerRef.current.currentTime = time;
+      playerRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(err => console.error("Audio play failed:", err));
+    } else {
+      setIsPlaying(true);
+    }
+  };
+  
+  // Pause handler
+  const handlePause = () => {
+    if (playerRef.current) {
+      playerRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
 
   return (
     <div className="container p-4">
@@ -183,6 +230,19 @@ function Modify() {
               onChange={(e) => setColor(e.target.value)}
             />
           </div>
+          <div className="mb-3">
+             <label className="form-label">Wait Time (seconds)</label>
+             <input
+               type="number"
+               className="form-control"
+               min="0"
+               step="0.1"
+               value={waitTime}
+               onChange={(e) => setWaitTime(parseFloat(e.target.value) || 0)}
+               placeholder="How long to hold this position"
+             />
+             <small className="text-muted">Time the dancer stays in this position before moving to the next one</small>
+           </div>
           <div className="mt-4 p-3 bg-light rounded" style={{ background: "transparent" }}>
             <h4>Routine Requirements Fulfilled</h4>
             {routineData?.requirements &&
@@ -252,21 +312,14 @@ function Modify() {
       <div className="mt-3">
         <p style={{ color: "white" }}>Current Time: {time.toFixed(2)} sec</p>
         <button
-          onClick={() => {
-            playerRef.current.currentTime = time;
-            playerRef.current.play();
-            setIsPlaying(true);
-          }}
+          onClick={handlePlay}
           disabled={isPlaying}
           style={{ marginRight: "8px" }}
         >
           Play
         </button>
         <button
-          onClick={() => {
-            playerRef.current.pause();
-            setIsPlaying(false);
-          }}
+          onClick={handlePause}
           disabled={!isPlaying}
         >
           Pause

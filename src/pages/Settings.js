@@ -5,10 +5,20 @@ function Settings() {
     const [routine, setRoutine] = useState(JSON.parse(sessionStorage.getItem('uploadedJson')));
 
     const [musicFile, setMusicFile] = useState(null);
-    const [defaultLength, setDefaultLength] = useState(100);
+    const [defaultLength, setDefaultLength] = useState(180);
 
     const navigate = useNavigate();
     const loc = useLocation();
+
+    useEffect(() => {
+        const syncOnFocus = () => {
+          const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
+          setRoutine(latestJson);
+        };
+      
+        window.addEventListener("focus", syncOnFocus);
+        return () => window.removeEventListener("focus", syncOnFocus);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,9 +43,16 @@ function Settings() {
     };
 
     const handleSaveAndProceed = () => {
-        sessionStorage.setItem("uploadedJson", JSON.stringify(routine));
+        const updatedRoutine = {
+            ...routine,
+            music_source_path: musicFile || routine.music_source_path,
+            default_length: defaultLength || routine.default_length
+        };
+
+        sessionStorage.setItem("uploadedJson", JSON.stringify(updatedRoutine));
         navigate("/Overview");
     };
+
 
     const handleBack = () => {
         const prev = loc.state.new ? "/" : "/Overview";
@@ -96,7 +113,7 @@ function Settings() {
                 </div>
 
                 <div style={{ width: "45%" }}>
-                    <h2>General Settings</h2>
+                    <h2>{/* General Settings*/} &#x200b;</h2> {/* Don't worry about the wizardry */}
                     <label>Default Routine Length (s): </label> {/* TODO: this doesn't set a global default, but a routine default */}
                     <input
                         type="text"
