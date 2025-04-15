@@ -87,7 +87,7 @@ function ChoreographyMap({
           key={`control-${index}`}
           x={controlPoint.x}
           y={controlPoint.y}
-          radius={8}
+          radius={12}
           fill="blue"
           opacity={0}
           draggable
@@ -134,7 +134,7 @@ function ChoreographyMap({
             <Circle
               x={getX(move)}
               y={getY(move)}
-              radius={10}
+              radius={12}
               fill={move.color || "black"}
               stroke="white"
               strokeWidth={1}
@@ -186,7 +186,7 @@ function ChoreographyMap({
           <Circle
             x={liveMarker.x}
             y={liveMarker.y}
-            radius={20}
+            radius={12}
             fill={liveMarker.color || "green"}
           />
         )}
