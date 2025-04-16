@@ -358,30 +358,19 @@ function Overview() {
             </div>
           </div>
 
-          <div style={{
-            marginTop: "30px",
-            marginBottom: "30px",
-            padding: "20px",
-            backgroundColor: "#1e1e24",
-            borderRadius: "10px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
-          }}>
-            <h4 style={{ color: "#fff", marginBottom: "20px" }}>Routine Timeline</h4>
-
-            <Timeline
-              musicDuration={musicDuration}
-              currentTime={currentTime}
-              moves={jsonData?.moves}
-              currentEffectiveMove={currentEffectiveMove}
-              setCurrentTime={setCurrentTime}
-              setSelectedMoveIndex={setSelectedMoveIndex}
-              playerRef={playerRef}
-            />
-          </div>
+          <Timeline
+            musicDuration={musicDuration}
+            currentTime={currentTime}
+            moves={jsonData?.moves}
+            currentEffectiveMove={currentEffectiveMove}
+            setCurrentTime={setCurrentTime}
+            setSelectedMoveIndex={setSelectedMoveIndex}
+            playerRef={playerRef}
+          />
 
           <div style={{ marginTop: "20px" }}>
             <button
-              className="botContentButton"
+              className="btn btn-light"
               onClick={handlePlay}
               disabled={isPlaying}
               style={{ marginRight: "8px" }}
@@ -389,7 +378,7 @@ function Overview() {
               <img src="chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
-              className="botContentButton"
+              className="btn btn-light"
               onClick={handleStop}
               disabled={!isPlaybackActive}
               style={{ marginRight: "8px" }}
@@ -397,7 +386,7 @@ function Overview() {
               <img src="chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
-              className="botContentButton"
+              className="btn btn-light"
               onClick={handleEnd}
               disabled={!isPlaybackActive}
             >

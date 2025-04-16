@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const Timeline = ({
   musicDuration,
@@ -9,25 +9,61 @@ const Timeline = ({
   setSelectedMoveIndex,
   playerRef
 }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const timelineBarRef = useRef(null);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    updateTime(e);
+    document.body.style.userSelect = 'none';  // Prevent text selection
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    updateTime(e);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    document.body.style.userSelect = '';
+  };
+
+  const updateTime = (e) => {
+    const rect = timelineBarRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percent = Math.min(Math.max(clickX / rect.width, 0), 1);
+    const newTime = percent * musicDuration;
+
+    setCurrentTime(newTime);
+    if (playerRef.current) {
+      playerRef.current.currentTime = newTime;
+    }
+  };
+
+  // Make sure mouseup outside component is accepted
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        document.body.style.userSelect = '';
+      }
+    };
+
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => document.removeEventListener('mouseup', handleGlobalMouseUp);
+  }, [isDragging]);
+
   const adjustColor = (color, factor) => {
     if (!color || color === "#666") return color;
-
-    // Convert hex to RGB
     let r = parseInt(color.substring(1, 3), 16);
     let g = parseInt(color.substring(3, 5), 16);
     let b = parseInt(color.substring(5, 7), 16);
-
-    // Lighten or darken
     r = Math.round(r * factor);
     g = Math.round(g * factor);
     b = Math.round(b * factor);
-
-    // Ensure values are in valid range
     r = Math.min(255, Math.max(0, r));
     g = Math.min(255, Math.max(0, g));
     b = Math.min(255, Math.max(0, b));
-
-    // Convert back to hex
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 
@@ -66,11 +102,20 @@ const Timeline = ({
       </div>
 
       {/* Move segments container */}
-      <div style={{
-        position: "relative",
-        height: "40px",
-        marginBottom: "15px"
-      }}>
+      <div
+        // All of the new logic for moving via the timeline portion
+        ref={timelineBarRef}
+        style={{
+          position: "relative",
+          height: "40px",
+          marginBottom: "15px",
+          cursor: isDragging ? 'grabbing' : 'pointer',
+          touchAction: 'none'
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
         {moves && moves.map((move, index) => {
           const nextMove = moves[index + 1];
           const moveEndTime = move.startTime + (move.waitTime || 0);
@@ -108,7 +153,8 @@ const Timeline = ({
                     zIndex: currentEffectiveMove === move ? 10 : 1,
                     border: currentEffectiveMove === move ? "2px solid #fff" : "none"
                   }}
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.stopPropagation(); // prevents stacking mousedown
                     setCurrentTime(move.startTime);
                     setSelectedMoveIndex(index);
                     if (playerRef.current) {
@@ -152,7 +198,8 @@ const Timeline = ({
                     whiteSpace: "nowrap",
                     border: currentEffectiveMove === move ? "2px solid #fff" : "none"
                   }}
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
                     const clickTime = move.waitTime > 0 ? moveEndTime : move.startTime;
                     setCurrentTime(clickTime);
                     setSelectedMoveIndex(index);
@@ -177,7 +224,8 @@ const Timeline = ({
           height: "35px",
           width: "2px",
           backgroundColor: "#ff5722",
-          zIndex: 15
+          zIndex: 15,
+          pointerEvents: 'none'  // Allow clicks
         }}>
           <div style={{
             position: "absolute",
@@ -192,47 +240,17 @@ const Timeline = ({
         </div>
       </div>
 
-      {/* Slider control */}
-      <div style={{ position: "relative" }}>
-        <input
-          type="range"
-          min="0"
-          max={musicDuration || 100}
-          step="0.01"
-          value={currentTime}
-          onChange={(e) => {
-            const newTime = parseFloat(e.target.value);
-            setCurrentTime(newTime);
-            if (playerRef.current) {
-              playerRef.current.currentTime = newTime;
-            }
-          }}
-          style={{
-            width: "100%",
-            height: "10px",
-            appearance: "none",
-            backgroundColor: "#333",
-            borderRadius: "5px",
-            outline: "none",
-            opacity: "1",
-            transition: "opacity .2s",
-            accentColor: "#007bff"
-          }}
-        />
-        <div style={{
-          marginTop: "8px",
-          display: "flex",
-          justifyContent: "space-between",
-          color: "#aaa",
-          fontSize: "12px"
-        }}>
-          <span>0:00</span>
-          <span style={{ color: "#fff" }}>
-            Current: {Math.floor(currentTime / 60)}:{String(Math.floor(currentTime % 60)).padStart(2, '0')}.
-            {String(Math.floor((currentTime % 1) * 100)).padStart(2, '0')}
-          </span>
-          <span>{Math.floor(musicDuration / 60)}:{String(Math.floor(musicDuration % 60)).padStart(2, '0')}</span>
-        </div>
+      {/* Just the current time line */}
+      <div style={{
+        marginTop: "8px",
+        display: "flex",
+        justifyContent: "center",
+        color: "#fff",
+        fontSize: "12px",
+        background: "transparent"
+      }}>
+        Current: {Math.floor(currentTime / 60)}:{String(Math.floor(currentTime % 60)).padStart(2, '0')}.
+        {String(Math.floor((currentTime % 1) * 100)).padStart(2, '0')}
       </div>
     </div>
   );
