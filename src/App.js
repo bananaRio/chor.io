@@ -11,12 +11,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Landing/>} />
+        <Route path="/" element={<Landing/>} /> {/* Shouldn't apply anymore, but left for safety */}
         <Route path="/chor.io" element={<Landing/>} />
-        <Route path="/Modify/:id" element={<Modify/>} />
-        <Route path="/Review" element={<Review/>} />
-        <Route path="/Settings" element={<Settings/>} />
-        <Route path="/Overview" element={<Overview/>} />
+        <Route path="/chor.io/modify/:id" element={<Modify/>} />
+        <Route path="/chor.io/review" element={<Review/>} />
+        <Route path="/chor.io/settings" element={<Settings/>} />
+        <Route path="/chor.io/overview" element={<Overview/>} />
       </Routes>
     </Router>
   );

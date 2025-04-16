@@ -24,12 +24,12 @@ function Overview() {
 
   const [isPlaybackActive, setIsPlaybackActive] = useState(false);
 
-  const handleBack = () => navigate("/");
-  const handleSettings = () => navigate("/Settings", { state: { new: false } });
-  const handleReview = () => navigate("/Review", { state: { new: false } });
+  const handleBack = () => navigate("/chor.io");
+  const handleSettings = () => navigate("/chor.io/settings", { state: { new: false } });
+  const handleReview = () => navigate("/chor.io/review", { state: { new: false } });
 
-  const handleModify = (moveId) => navigate(`/Modify/${moveId}`);
-  const handleNewMove = () => navigate("/Modify/new");
+  const handleModify = (moveId) => navigate(`/chor.io/modify/${moveId}`);
+  const handleNewMove = () => navigate("/chor.io/modify/new");
 
   useEffect(() => {
     const syncOnFocus = () => {
@@ -375,7 +375,7 @@ function Overview() {
               disabled={isPlaying}
               style={{ marginRight: "8px" }}
             >
-              <img src="chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
+              <img src="/chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
               className="btn btn-light"
@@ -383,14 +383,14 @@ function Overview() {
               disabled={!isPlaybackActive}
               style={{ marginRight: "8px" }}
             >
-              <img src="chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
+              <img src="/chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
               className="btn btn-light"
               onClick={handleEnd}
               disabled={!isPlaybackActive}
             >
-              <img src="chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
+              <img src="/chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
             </button>
           </div>
 

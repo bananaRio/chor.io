@@ -23,8 +23,8 @@ function Review() {
 
   const [isPlaybackActive, setIsPlaybackActive] = useState(false);
 
-  const handleBack = () => navigate("/Overview");
-  const handleExport = () => navigate("/", { state: { new: false } });
+  const handleBack = () => navigate("/chor.io/overview");
+  const handleExport = () => navigate("/chor.io", { state: { new: false } });
 
   useEffect(() => {
     const syncOnFocus = () => {
@@ -309,7 +309,7 @@ function Review() {
               disabled={isPlaying}
               style={{ marginRight: "8px" }}
             >
-              <img src="chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
+              <img src="/chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
               className="btn btn-light"
@@ -317,14 +317,14 @@ function Review() {
               disabled={!isPlaybackActive}
               style={{ marginRight: "8px" }}
             >
-              <img src="chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
+              <img src="/chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
             </button>
             <button
               className="btn btn-light"
               onClick={handleEnd}
               disabled={!isPlaybackActive}
             >
-              <img src="chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
+              <img src="/chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
             </button>
           </div>
         </div>

@@ -50,12 +50,12 @@ function Settings() {
         };
 
         sessionStorage.setItem("uploadedJson", JSON.stringify(updatedRoutine));
-        navigate("/Overview");
+        navigate("/chor.io/overview");
     };
 
 
     const handleBack = () => {
-        const prev = loc.state.new ? "/" : "/Overview";
+        const prev = loc.state.new ? "/chor.io" : "/chor.io/overview";
         navigate(prev);
     };
 

@@ -47,7 +47,7 @@ function Landing() {
 
         setJsonData(empty_routine);
         sessionStorage.setItem("uploadedJson", JSON.stringify(empty_routine));
-        navigate("/Settings", { state: { new: true } });
+        navigate("/chor.io/settings", { state: { new: true } });
     };
 
     const handleProceed = () => {
@@ -55,7 +55,7 @@ function Landing() {
             alert("Please upload a valid routine file or create a new routine before proceeding.");
             return;
         }
-        navigate("/Overview");
+        navigate("/chor.io/overview");
     };
 
     const isValidfileName = (name) => {

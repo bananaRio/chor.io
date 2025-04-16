@@ -89,7 +89,7 @@ function Modify() {
     if (!routineData) return;
     const updatedMoves = routineData.moves.filter((_, index) => index !== parseInt(id));
     sessionStorage.setItem("uploadedJson", JSON.stringify({ ...routineData, moves: updatedMoves }));
-    navigate("/Overview");
+    navigate("/chor.io/overview");
   };
 
   const handleSave = () => {
@@ -142,7 +142,7 @@ function Modify() {
       connectorOffsets
     };
     sessionStorage.setItem("uploadedJson", JSON.stringify(updatedData));
-    navigate("/Overview");
+    navigate("/chor.io/overview");
   };
 
 
@@ -164,7 +164,7 @@ function Modify() {
       <header className="d-flex justify-content-between align-items-center bg-light p-2 rounded">
         <h4>Modify</h4>
         <div style={{ background: "transparent" }}>
-          <button className="btn btn-secondary me-2" onClick={() => navigate("/Overview")}>
+          <button className="btn btn-secondary me-2" onClick={() => navigate("/chor.io/overview")}>
             Discard Changes
           </button>
           <button
@@ -173,7 +173,7 @@ function Modify() {
             style={{ border: "none", cursor: "pointer" }}
           >
             Save
-            {/*<img src="./images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} /> // ???*/}
+            {/*<img src="/chor.io/images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} /> // ???*/}
           </button>
           {id !== "new" && (
             <button
@@ -182,7 +182,7 @@ function Modify() {
               style={{ border: "none", cursor: "pointer" }}
             >
               Delete
-              {/*<img src="./images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
+              {/*<img src="chor.io/images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
             </button>
           )}
         </div>
