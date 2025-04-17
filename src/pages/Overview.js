@@ -282,132 +282,130 @@ function Overview() {
       </div>
 
       <div style={{ flex: 1, padding: "20px" }}>
-        <div>
-          <div className="row">
-            <div className="col">
-              <h2>{jsonData.routineName}</h2>
-            </div>
-            <button className="btn btn-primary" type="button" onClick={handleReview}>
-              Review
-            </button>
-            <button className="btn btn-secondary" type="button" onClick={handleBack}>
-              Landing Page
-            </button>
-            <button className="btn btn-primary" type="button" onClick={handleSettings}>
-              Settings
-            </button>
+        <div className="row">
+          <div className="col">
+            <h2>{jsonData.routineName}</h2>
           </div>
-
-          <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-            <div style={{ flex: 2 }}>
-              <h4>Position on Floor</h4>
-              <div
-                style={{
-                  height: "400px", // ??? Alt is (jsonData.dimensions.y.toString()) + "px",
-                  background: "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <ChoreographyMap
-                  duration={musicDuration}
-                  moveList={isPlaybackActive ? [] : jsonData?.moves}
-                  isEditable={false}
-                  connectorOffsets={jsonData.connectorOffsets || []}
-                  liveMarker={liveMarker}
-                  onMoveDoubleClick={(index) => {
-                    setSelectedMoveIndex(index);
-                    setEditedDescription(jsonData.moves[index].description || "");
-                  }}
-                  stageWidth={jsonData.dimensions.x}
-                  stageHeight={jsonData.dimensions.y}
-                />
-              </div>
-            </div>
-
-            <div style={{ flex: 1 }}>
-              <h4>Current Move Details</h4>
-              {currentEffectiveMove ? (
-                <div className="bg-light p-3 rounded border">
-                  <h5 className="mb-3" style={{ color: currentEffectiveMove.color }}>
-                    {currentEffectiveMove.name}
-                  </h5>
-                  {/* ??? Can we leverage this for the move and routine names too? */}
-                  <textarea
-                    value={editedDescription}
-                    onChange={(e) => setEditedDescription(e.target.value)}
-                    className="form-control mb-3"
-                    placeholder="Enter move description..."
-                    rows={3}
-                  />
-                  <button className="btn btn-success" onClick={handleSaveDescription}>
-                    Save Changes
-                  </button>
-                </div>
-              ) : (
-                <div className="bg-light p-3 rounded border d-flex align-items-center justify-content-center">
-                  No move selected at current time
-                </div>
-              )}
-              <br />
-              <h4>Routine Requirements</h4>
-              <div className="bg-light p-3 rounded border">
-                <RequirementsSection jsonData={jsonData} setJsonData={setJsonData} id={"Overview"} />
-              </div>
-            </div>
-          </div>
-
-          <Timeline
-            musicDuration={musicDuration}
-            currentTime={currentTime}
-            moves={jsonData?.moves}
-            currentEffectiveMove={currentEffectiveMove}
-            setCurrentTime={setCurrentTime}
-            setSelectedMoveIndex={setSelectedMoveIndex}
-            playerRef={playerRef}
-          />
-
-          <div style={{ marginTop: "20px" }}>
-            <button
-              className="btn btn-light"
-              onClick={handlePlay}
-              disabled={isPlaying}
-              style={{ marginRight: "8px" }}
-            >
-              <img src="/chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
-            </button>
-            <button
-              className="btn btn-light"
-              onClick={handleStop}
-              disabled={!isPlaybackActive}
-              style={{ marginRight: "8px" }}
-            >
-              <img src="/chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
-            </button>
-            <button
-              className="btn btn-light"
-              onClick={handleEnd}
-              disabled={!isPlaybackActive}
-            >
-              <img src="/chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
-            </button>
-          </div>
-
-          {musicFile && (
-            <audio
-              ref={playerRef}
-              controls
-              src={musicFile}
-              onLoadedMetadata={() => {
-                if (playerRef.current?.duration) {
-                  setMusicDuration(playerRef.current.duration); // TODO is it possible to move this to the upload section?
-                }
-              }}
-              style={{ display: "none" }}
-            />
-          )}
+          <button className="btn btn-primary" type="button" onClick={handleReview}>
+            Review
+          </button>
+          <button className="btn btn-secondary" type="button" onClick={handleBack}>
+            Landing Page
+          </button>
+          <button className="btn btn-primary" type="button" onClick={handleSettings}>
+            Settings
+          </button>
         </div>
+
+        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+          <div style={{ flex: 2 }}>
+            <h4>Position on Floor</h4>
+            <div
+              style={{
+                height: "400px", // ??? Alt is (jsonData.dimensions.y.toString()) + "px",
+                background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ChoreographyMap
+                duration={musicDuration}
+                moveList={isPlaybackActive ? [] : jsonData?.moves}
+                isEditable={false}
+                connectorOffsets={jsonData.connectorOffsets || []}
+                liveMarker={liveMarker}
+                onMoveDoubleClick={(index) => {
+                  setSelectedMoveIndex(index);
+                  setEditedDescription(jsonData.moves[index].description || "");
+                }}
+                stageWidth={jsonData.dimensions.x}
+                stageHeight={jsonData.dimensions.y}
+              />
+            </div>
+          </div>
+
+          <div style={{ flex: 1 }}>
+            <h4>Current Move Details</h4>
+            {currentEffectiveMove ? (
+              <div className="bg-light p-3 rounded border">
+                <h5 className="mb-3" style={{ color: currentEffectiveMove.color }}>
+                  {currentEffectiveMove.name}
+                </h5>
+                {/* ??? Can we leverage this for the move and routine names too? */}
+                <textarea
+                  value={editedDescription}
+                  onChange={(e) => setEditedDescription(e.target.value)}
+                  className="form-control mb-3"
+                  placeholder="Enter move description..."
+                  rows={3}
+                />
+                <button className="btn btn-success" onClick={handleSaveDescription}>
+                  Save Changes
+                </button>
+              </div>
+            ) : (
+              <div className="bg-light p-3 rounded border d-flex align-items-center justify-content-center">
+                No move selected at current time
+              </div>
+            )}
+            <br />
+            <h4>Routine Requirements</h4>
+            <div className="bg-light p-3 rounded border">
+              <RequirementsSection jsonData={jsonData} setJsonData={setJsonData} id={"Overview"} />
+            </div>
+          </div>
+        </div>
+
+        <Timeline
+          musicDuration={musicDuration}
+          currentTime={currentTime}
+          moves={jsonData?.moves}
+          currentEffectiveMove={currentEffectiveMove}
+          setCurrentTime={setCurrentTime}
+          setSelectedMoveIndex={setSelectedMoveIndex}
+          playerRef={playerRef}
+        />
+
+        <div style={{ marginTop: "20px" }}>
+          <button
+            className="btn btn-light"
+            onClick={handlePlay}
+            disabled={isPlaying}
+            style={{ marginRight: "8px" }}
+          >
+            <img src="/chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
+          </button>
+          <button
+            className="btn btn-light"
+            onClick={handleStop}
+            disabled={!isPlaybackActive}
+            style={{ marginRight: "8px" }}
+          >
+            <img src="/chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
+          </button>
+          <button
+            className="btn btn-light"
+            onClick={handleEnd}
+            disabled={!isPlaybackActive}
+          >
+            <img src="/chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
+          </button>
+        </div>
+
+        {musicFile && (
+          <audio
+            ref={playerRef}
+            controls
+            src={musicFile}
+            onLoadedMetadata={() => {
+              if (playerRef.current?.duration) {
+                setMusicDuration(playerRef.current.duration); // TODO is it possible to move this to the upload section?
+              }
+            }}
+            style={{ display: "none" }}
+          />
+        )}
       </div>
     </div>
   );

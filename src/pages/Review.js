@@ -227,106 +227,104 @@ function Review() {
 
 
       <div style={{ flex: 1, padding: "20px" }}>
-        <div>
-          <div className="row">
-            <div className="col">
-              <h2>{jsonData.routineName}</h2>
-            </div>
-            <button className="btn btn-secondary" type="button" onClick={handleBack}>
-              Back
-            </button>
-            <button className="btn btn-primary" type="button" onClick={handleExport}>
-              Export
-            </button>
+        <div className="row">
+          <div className="col">
+            <h2>{jsonData.routineName}</h2>
           </div>
+          <button className="btn btn-secondary" type="button" onClick={handleBack}>
+            Back
+          </button>
+          <button className="btn btn-primary" type="button" onClick={handleExport}>
+            Export
+          </button>
+        </div>
 
-          <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-            {/* Left: Choreography Map */}
-            <div style={{ flex: 1.5 }}>
-              <h4>Position on Floor</h4>
-              <div
-                style={{
-                  height: "400px",
-                  background: "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  paddingLeft: "20px"
-                }}
-              >
-                <ChoreographyMap
-                  duration={musicDuration}
-                  moveList={isPlaybackActive ? [] : jsonData?.moves}
-                  isEditable={false}
-                  connectorOffsets={jsonData.connectorOffsets || []}
-                  liveMarker={liveMarker}
-                  stageWidth={jsonData.dimensions.x}
-                  stageHeight={jsonData.dimensions.y}
-                />
-              </div>
-            </div>
-
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <video
-                preload="none"
-                ref={videoRef}
-                style={{
-                  width: "108%",
-                  height: "225%",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  backgroundColor: "#000",
-                  marginTop: "40px",
-                  marginLeft: "-40px",
-                  pointerEvents: "none"
-                }}
-                onLoadedMetadata={() => {
-                  if (playerRef.current?.duration) {
-                    setMusicDuration(playerRef.current.duration);
-                  }
-                }}
-                src={musicFile}
-              >
-              </video>
-
+        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+          {/* Left: Choreography Map */}
+          <div style={{ flex: 1.5 }}>
+            <h4>Position on Floor</h4>
+            <div
+              style={{
+                height: "400px",
+                background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                paddingLeft: "20px"
+              }}
+            >
+              <ChoreographyMap
+                duration={musicDuration}
+                moveList={isPlaybackActive ? [] : jsonData?.moves}
+                isEditable={false}
+                connectorOffsets={jsonData.connectorOffsets || []}
+                liveMarker={liveMarker}
+                stageWidth={jsonData.dimensions.x}
+                stageHeight={jsonData.dimensions.y}
+              />
             </div>
           </div>
 
-          <Timeline
-            musicDuration={musicDuration}
-            currentTime={currentTime}
-            moves={jsonData?.moves}
-            currentEffectiveMove={currentEffectiveMove}
-            setCurrentTime={updateTime}
-            setSelectedMoveIndex={setSelectedMoveIndex}
-            playerRef={playerRef}
-          />
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <video
+              preload="none"
+              ref={videoRef}
+              style={{
+                width: "108%",
+                height: "225%",
+                objectFit: "cover",
+                borderRadius: "10px",
+                backgroundColor: "#000",
+                marginTop: "40px",
+                marginLeft: "-40px",
+                pointerEvents: "none"
+              }}
+              onLoadedMetadata={() => {
+                if (playerRef.current?.duration) {
+                  setMusicDuration(playerRef.current.duration);
+                }
+              }}
+              src={musicFile}
+            >
+            </video>
 
-          <div style={{ marginTop: "20px" }}>
-            <button
-              className="btn btn-light"
-              onClick={handlePlay}
-              disabled={isPlaying}
-              style={{ marginRight: "8px" }}
-            >
-              <img src="/chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
-            </button>
-            <button
-              className="btn btn-light"
-              onClick={handleStop}
-              disabled={!isPlaybackActive}
-              style={{ marginRight: "8px" }}
-            >
-              <img src="/chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
-            </button>
-            <button
-              className="btn btn-light"
-              onClick={handleEnd}
-              disabled={!isPlaybackActive}
-            >
-              <img src="/chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
-            </button>
           </div>
+        </div>
+
+        <Timeline
+          musicDuration={musicDuration}
+          currentTime={currentTime}
+          moves={jsonData?.moves}
+          currentEffectiveMove={currentEffectiveMove}
+          setCurrentTime={updateTime}
+          setSelectedMoveIndex={setSelectedMoveIndex}
+          playerRef={playerRef}
+        />
+
+        <div style={{ marginTop: "20px" }}>
+          <button
+            className="btn btn-light"
+            onClick={handlePlay}
+            disabled={isPlaying}
+            style={{ marginRight: "8px" }}
+          >
+            <img src="/chor.io/images/play.png" alt="Play" style={{ width: "30px", height: "30px" }} />
+          </button>
+          <button
+            className="btn btn-light"
+            onClick={handleStop}
+            disabled={!isPlaybackActive}
+            style={{ marginRight: "8px" }}
+          >
+            <img src="/chor.io/images/pause.png" alt="Pause" style={{ width: "30px", height: "30px" }} />
+          </button>
+          <button
+            className="btn btn-light"
+            onClick={handleEnd}
+            disabled={!isPlaybackActive}
+          >
+            <img src="/chor.io/images/stop.png" alt="Stop" style={{ width: "30px", height: "30px" }} />
+          </button>
         </div>
       </div>
     </div>
