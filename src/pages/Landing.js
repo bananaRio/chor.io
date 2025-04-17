@@ -128,7 +128,7 @@ function Landing() {
 
                 {/* Right Pane */}
                 <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <img src="chor.io/images/choriologo.png" alt="Logo" style={{ maxWidth: "80%", maxHeight: "80%" }} />
+                    <img src="/chor.io/images/choriologo.png" alt="Logo" style={{ maxWidth: "80%", maxHeight: "80%" }} />
                 </div>
             </div>
         </div>

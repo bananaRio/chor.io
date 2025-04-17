@@ -182,7 +182,7 @@ function Modify() {
               style={{ border: "none", cursor: "pointer" }}
             >
               Delete
-              {/*<img src="chor.io/images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
+              {/*<img src="/chor.io/images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
             </button>
           )}
         </div>
