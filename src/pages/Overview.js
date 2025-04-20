@@ -30,7 +30,7 @@ function Overview() {
 
   const handleModify = (moveId) => navigate(`/chor.io/modify/${moveId}`);
   const handleNewMove = () => navigate("/chor.io/modify/new");
-
+  const [justSaved, setJustSaved] = useState(false);
   useEffect(() => {
     const syncOnFocus = () => {
       const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
@@ -99,6 +99,11 @@ function Overview() {
       "uploadedJson",
       JSON.stringify({ ...jsonData, moves: updatedMoves })
     );
+    setJustSaved(true);
+    setTimeout(() => {
+      setJustSaved(false);
+    }, 1000);
+
   };
 
   const computeLiveMarker = () => {
@@ -233,6 +238,19 @@ function Overview() {
 
   return (
     <div style={{ display: "flex" }}>
+      {justSaved && (
+          <div
+            className="alert alert-success position-fixed"
+            style={{
+              bottom: '20px',
+              right: '20px',
+              margin: 0,
+              zIndex: 1050
+            }}
+          >
+            Changes saved!
+          </div>
+      )}
       <div style={{ width: "300px", padding: "10px", borderRight: "1px solid #ccc", overflowY: "auto" }}>
         <div style={{ marginBottom: "20px" }}>
           <button
@@ -340,7 +358,9 @@ function Overview() {
                   placeholder="Enter move description..."
                   rows={3}
                 />
-                <button className="btn btn-success" onClick={handleSaveDescription}>
+                <button className="btn btn-success" onClick={handleSaveDescription}
+                  style={{backgroundColor: justSaved ? "green" : "blue", 
+                          borderColor: justSaved ? "green" : "blue"}}>
                   Save Changes
                 </button>
               </div>
