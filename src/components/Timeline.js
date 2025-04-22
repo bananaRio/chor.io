@@ -153,14 +153,14 @@ const Timeline = ({
                     zIndex: currentEffectiveMove === move ? 10 : 1,
                     border: currentEffectiveMove === move ? "2px solid #fff" : "none"
                   }}
-                  onMouseDown={(e) => {
-                    e.stopPropagation(); // prevents stacking mousedown
-                    setCurrentTime(move.startTime);
-                    setSelectedMoveIndex(index);
-                    if (playerRef.current) {
-                      playerRef.current.currentTime = move.startTime;
-                    }
-                  }}
+                  // onMouseDown={(e) => {
+                  //   e.stopPropagation(); // prevents stacking mousedown
+                  //   setCurrentTime(move.startTime);
+                  //   setSelectedMoveIndex(index);
+                  //   if (playerRef.current) {
+                  //     playerRef.current.currentTime = move.startTime;
+                  //   }
+                  // }}
                   title={`${move.name} - Wait time: ${move.waitTime}s`}
                 >
                   {move.name}
@@ -198,15 +198,15 @@ const Timeline = ({
                     whiteSpace: "nowrap",
                     border: currentEffectiveMove === move ? "2px solid #fff" : "none"
                   }}
-                  onMouseDown={(e) => {
-                    e.stopPropagation();
-                    const clickTime = move.waitTime > 0 ? moveEndTime : move.startTime;
-                    setCurrentTime(clickTime);
-                    setSelectedMoveIndex(index);
-                    if (playerRef.current) {
-                      playerRef.current.currentTime = clickTime;
-                    }
-                  }}
+                  // onMouseDown={(e) => {
+                  //   e.stopPropagation();
+                  //   const clickTime = move.waitTime > 0 ? moveEndTime : move.startTime;
+                  //   setCurrentTime(clickTime);
+                  //   setSelectedMoveIndex(index);
+                  //   if (playerRef.current) {
+                  //     playerRef.current.currentTime = clickTime;
+                  //   }
+                  // }}
                   title={`${move.name}${move.waitTime > 0 ? ` - Transition after ${move.waitTime}s wait` : ''}`}
                 >
                   {move.waitTime > 0 ? "" : move.name}
