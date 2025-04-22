@@ -7,194 +7,173 @@ import './Page.css';
 function Modify() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [routineData, setRoutineData] = useState(JSON.parse(sessionStorage.getItem("uploadedJson")));
-  const [waitTime, setWaitTime] = useState(0);
-  const [position, setPosition] = useState({ x: routineData.dimensions.x / 2, y: routineData.dimensions.y / 2 });
-  const [time, setTime] = useState(0);
+
+  // routine data
+  const [routineData, setRoutineData] = useState(
+    JSON.parse(sessionStorage.getItem("uploadedJson"))
+  );
+
+  // ref to Name input to measure its vertical position
+  const nameInputRef = useRef(null);
+  const [mapOffset, setMapOffset] = useState(0);
+
+  // form state
   const [name, setName] = useState("New Move");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState("#000000");
+  
+  const [waitTime, setWaitTime] = useState(0);
+  const [position, setPosition] = useState({
+    x: routineData.dimensions.x / 2,
+    y: routineData.dimensions.y / 2,
+  });
+  const [time, setTime] = useState(0);
   const [checkedRequirements, setCheckedRequirements] = useState({});
+
+  // curve offsets
   const [connectorOffsets, setConnectorOffsets] = useState([]);
+
+  // audio playback
   const [musicFile, setMusicFile] = useState(null);
-  const [musicDuration, setMusicDuration] = useState(routineData.defaultLength); // default fallback
+  const [musicDuration, setMusicDuration] = useState(
+    routineData.defaultLength
+  );
   const playerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  // sync and initialize on focus / id change
   useEffect(() => {
-    const syncOnFocus = () => {
-      const latestJson = JSON.parse(sessionStorage.getItem("uploadedJson"));
-      setRoutineData(latestJson);
-    };
-
-    window.addEventListener("focus", syncOnFocus);
-    return () => window.removeEventListener("focus", syncOnFocus);
-  }, []);
-
-
-  useEffect(() => {
-    let animationFrameId;
-
-    const animate = () => {
-      if (playerRef.current && !playerRef.current.paused) {
-        const currentTime = playerRef.current.currentTime;
-        setTime(currentTime);
-        animationFrameId = requestAnimationFrame(animate);
-      } else {
-        setIsPlaying(false);
+    const sync = () => {
+      const stored = JSON.parse(
+        sessionStorage.getItem("uploadedJson")
+      ) || { moves: [] };
+      setRoutineData(stored);
+      if (stored.music_source_path) setMusicFile(stored.music_source_path);
+      if (stored.connectorOffsets) setConnectorOffsets(stored.connectorOffsets);
+      if (id !== "new" && stored.moves[id]) {
+        const mv = stored.moves[id];
+        setName(mv.name);
+        setDescription(mv.description);
+        setColor(mv.color);
+        setWaitTime(mv.waitTime || 0);
+        setPosition(mv.positions);
+        setTime(mv.startTime);
+        const chk = {};
+        mv.requirements_filled.forEach(r => (chk[r.requirement_name] = true));
+        setCheckedRequirements(chk);
       }
     };
-
-    if (isPlaying) {
-      animationFrameId = requestAnimationFrame(animate);
-    }
-
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [isPlaying]);
-
-  useEffect(() => {
-    const storedData = JSON.parse(sessionStorage.getItem("uploadedJson")) || { moves: [] };
-    setRoutineData(storedData);
-
-    if (storedData.music_source_path) {
-      setMusicFile(storedData.music_source_path);
-    }
-
-    if (storedData.connectorOffsets) {
-      setConnectorOffsets(storedData.connectorOffsets);
-    }
-
-    if (id !== "new" && storedData.moves[id]) {
-      const move = storedData.moves[id];
-      setName(move.name);
-      setDescription(move.description);
-      setTime(move.startTime);
-      setPosition(move.positions);
-      setColor(move.color);
-      setWaitTime(move.waitTime || 0);
-
-      const checks = {};
-      move.requirements_filled.forEach((req) => {
-        checks[req.requirement_name] = true;
-      });
-      setCheckedRequirements(checks);
-    }
+    sync();
+    window.addEventListener("focus", sync);
+    return () => window.removeEventListener("focus", sync);
   }, [id]);
 
-  const handleDelete = () => {
-    if (!routineData) return;
-    const updatedMoves = routineData.moves.filter((_, index) => index !== parseInt(id));
-    sessionStorage.setItem("uploadedJson", JSON.stringify({ ...routineData, moves: updatedMoves }));
-    navigate("/chor.io/overview");
-  };
+  // measure Name input offset for map alignment
+  useEffect(() => {
+    if (nameInputRef.current) {
+      setMapOffset(nameInputRef.current.offsetTop);
+    }
+  }, []);
 
+  // audio time tracking
+  useEffect(() => {
+    let anim;
+    const step = () => {
+      if (playerRef.current && !playerRef.current.paused) {
+        setTime(playerRef.current.currentTime);
+        anim = requestAnimationFrame(step);
+      }
+    };
+    if (isPlaying) anim = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(anim);
+  }, [isPlaying]);
+
+  // save move
   const handleSave = () => {
     if (!routineData) return;
-
-    const updatedMoves = [...routineData.moves];
-    if (id === "new" && name === "New Move") {
+    if (id === "new" && name.trim() === "New Move") {
       alert("Error: Move name must not be 'New Move'.");
       return;
     }
-
-    // Check for startTime conflict
-    const conflictingMove = routineData.moves.find((move, idx) => {
-      const isSameTime = move.startTime === time;
-      const isDifferentMove = id === "new" || parseInt(id) !== idx;
-      return isSameTime && isDifferentMove;
-    });
-
-    if (conflictingMove) {
-      alert(
-        `Error: Another move (${conflictingMove.name}) already starts at ${time.toFixed(
-          2
-        )} seconds. Please choose a different time.`
-      );
+    const conflict = routineData.moves.find(
+      (m, idx) => m.startTime === time && (id === "new" || idx !== parseInt(id))
+    );
+    if (conflict) {
+      alert(`Error: Another move (${conflict.name}) starts at ${time.toFixed(2)}s.`);
       return;
     }
-
-    const newMove = {
+    const newMv = {
       name,
-      startTime: time,
-      positions: position,
       description,
-      waitTime: waitTime,
+      color,
+      waitTime,
+      positions: position,
+      startTime: time,
       requirements_filled: Object.keys(checkedRequirements)
-        .filter((key) => checkedRequirements[key])
-        .map((key) => ({ requirement_name: key })),
-      color
+        .filter(r => checkedRequirements[r])
+        .map(r => ({ requirement_name: r })),
     };
-
-    if (id === "new") {
-      updatedMoves.push(newMove);
-    } else {
-      updatedMoves[parseInt(id)] = newMove;
-    }
-
-    updatedMoves.sort((a, b) => a.startTime - b.startTime);
-    const updatedData = {
-      ...routineData,
-      moves: updatedMoves,
-      connectorOffsets
-    };
-    sessionStorage.setItem("uploadedJson", JSON.stringify(updatedData));
+    const arr = [...routineData.moves];
+    if (id === "new") arr.push(newMv);
+    else arr[parseInt(id)] = newMv;
+    arr.sort((a, b) => a.startTime - b.startTime);
+    const updated = { ...routineData, moves: arr, connectorOffsets };
+    sessionStorage.setItem("uploadedJson", JSON.stringify(updated));
     navigate("/chor.io/overview");
   };
 
-
-  const handlePositionChange = (newPosition) => {
-    setPosition(newPosition);
+  // delete move
+  const handleDelete = () => {
+    if (!routineData || id === "new") return;
+    const arr = routineData.moves.filter((_, i) => i !== parseInt(id));
+    sessionStorage.setItem(
+      "uploadedJson",
+      JSON.stringify({ ...routineData, moves: arr })
+    );
+    navigate("/chor.io/overview");
   };
 
-  const currentMove = {
-    name,
-    color,
-    startTime: time
+  // remove current for preview
+  const savedMoves = () => {
+    const arr = [...(routineData.moves || [])];
+    if (id !== "new") arr.splice(parseInt(id), 1);
+    return arr;
   };
 
-  let savedMoves = routineData ? [...routineData.moves] : [];
-  if (id !== "new") savedMoves.splice(parseInt(id), 1);
+  const currentMove = { name, color, startTime: time };
 
   return (
     <div style={{ flex: 1, padding: "40px" }}>
       <div className="row">
         <div className="col">
-          <h2>Modify</h2>
+          <h2>Modify Move</h2>
         </div>
-        <button className="btn btn-secondary" onClick={() => navigate("/chor.io/overview")}>
-          Discard Changes
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={handleSave}
-          style={{ border: "none", cursor: "pointer" }}
-        >
-          Save
-        </button>
-        {id !== "new" && (
-          <button
-            className="btn btn-danger"
-            onClick={handleDelete}
-            style={{ border: "none", cursor: "pointer" }}
-          >
-            Delete
-          </button>
-        )}
+        <button className="btn btn-secondary" onClick={() => navigate("/chor.io/overview")}>Discard</button>
+        <button className="btn btn-primary" onClick={handleSave}>Save</button>
+        {id !== "new" && <button className="btn btn-danger" onClick={handleDelete}>Delete</button>}
       </div>
 
       <div className="row mt-4">
+        {/* left: form */}
         <div className="col-md-6">
           <div className="mb-3">
             <label className="form-label">Name</label>
-            <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              ref={nameInputRef}
+              type="text"
+              className="form-control"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
           </div>
           <div className="mb-3">
-            <label className="form-label">Text</label>
-            <textarea className="form-control" value={description} onChange={(e) => setDescription(e.target.value)} />
+            <label className="form-label">Description</label>
+            <textarea
+              className="form-control"
+              rows={3}
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+            />
           </div>
           <div className="mb-3">
             <label className="form-label">Color</label>
@@ -202,84 +181,74 @@ function Modify() {
               type="color"
               className="form-control form-control-color"
               value={color}
-              onChange={(e) => setColor(e.target.value)}
+              onChange={e => setColor(e.target.value)}
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Wait Time (seconds)</label>
+            <label className="form-label">Wait Time (s)</label>
             <input
               type="number"
               className="form-control"
-              min="0"
-              step="0.1"
+              min={0}
+              step={0.1}
               value={waitTime}
-              onChange={(e) => setWaitTime(parseFloat(e.target.value) || 0)}
-              placeholder="How long to hold this position"
+              onChange={e => setWaitTime(parseFloat(e.target.value) || 0)}
             />
-            <small className="text-muted">Time the dancer stays in this position before moving to the next one</small>
+            <small className="text-muted">How long before next move</small>
           </div>
-          <div className="mt-4 p-3 bg-light rounded" style={{ background: "transparent" }}>
-            <h4>Routine Requirements Fulfilled</h4>
-            {routineData?.requirements &&
-              Object.keys(routineData.requirements).map((requirement, index) => (
-                <div key={index} className="form-check" style={{ background: "transparent", color: "black" }}>
+          <div className="p-3 bg-light rounded mt-4">
+            <h5>Requirements</h5>
+            {routineData.requirements &&
+              Object.keys(routineData.requirements).map((req, idx) => (
+                <div key={idx} className="form-check">
                   <input
-                    type="checkbox"
                     className="form-check-input"
-                    id={`requirement-${index}`}
-                    checked={checkedRequirements[requirement] || false}
-                    onChange={() => {
-                      setCheckedRequirements((prev) => ({
-                        ...prev,
-                        [requirement]: !prev[requirement]
-                      }));
-                    }}
+                    type="checkbox"
+                    id={`req-${idx}`}
+                    checked={checkedRequirements[req] || false}
+                    onChange={() =>
+                      setCheckedRequirements(prev => ({ ...prev, [req]: !prev[req] }))
+                    }
                   />
-                  <label className="form-check-label" htmlFor={`requirement-${index}`}>
-                    <b>{requirement}</b> -- {routineData.requirementsDescriptions[requirement]}
+                  <label className="form-check-label" htmlFor={`req-${idx}`}> 
+                    <b>{req}</b>: {routineData.requirementsDescriptions[req]}
                   </label>
                 </div>
               ))}
           </div>
         </div>
 
-        <div className="col-md-6">
+        {/* right: map */}
+        <div className="col-md-6" style={{ marginTop: mapOffset }}>
           <ChoreographyMap
-            moveList={savedMoves}
-            editableMove={{
-              x: position.x,
-              y: position.y,
-              id: name,
-              color,
-              note: name
-            }}
-            onEditableMoveChange={handlePositionChange}
-            isEditable={true}
+            moveList={savedMoves()}
+            editableMove={{ startTime: time, positions: position, color }}
+            onEditableMoveChange={setPosition}
+            isEditable
             connectorOffsets={connectorOffsets}
             onConnectorOffsetsChange={setConnectorOffsets}
             stageWidth={routineData.dimensions.x}
             stageHeight={routineData.dimensions.y}
           />
-          <div className="mt-2">
-            <p>Current position: X: {Math.round(position.x)}, Y: {Math.round(position.y)}</p>
-          </div>
+          <p style={{ marginTop: '0.5rem' }}>
+            Position: X={Math.round(position.x)}, Y={Math.round(position.y)}
+          </p>
         </div>
       </div>
 
-      <br />
-      <br />
-      <h4>Select Desired Time</h4>
-      <Timeline
-        musicDuration={musicDuration}
-        currentTime={time}
-        moves={routineData?.moves || []}  // Pass just the moves array
-        currentEffectiveMove={currentMove}  // Pass the current move being edited
-        setCurrentTime={setTime}
-        setSelectedMoveIndex={() => { }}  // Empty function since we don't need move selection in modify mode
-        playerRef={playerRef}
-      />
+      <div className="mt-4">
+        <h4>Select Time</h4>
+        <Timeline
+          musicDuration={musicDuration}
+          currentTime={time}
+          moves={routineData.moves}
+          currentEffectiveMove={currentMove}
+          setCurrentTime={setTime}
+          setSelectedMoveIndex={() => {}}
+          playerRef={playerRef}
+        />
+      </div>
 
-      {/* Audio */}
       {musicFile && (
         <audio
           ref={playerRef}
