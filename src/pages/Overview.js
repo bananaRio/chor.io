@@ -15,7 +15,7 @@ function Overview() {
   const lastMoveRef = useRef(null);
 
   const [musicFile, setMusicFile] = useState(null);
-  const [musicDuration, setMusicDuration] = useState(180);
+  const [musicDuration, setMusicDuration] = useState(jsonData.defaultLength);
 
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);

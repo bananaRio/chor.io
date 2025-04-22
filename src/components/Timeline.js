@@ -118,7 +118,7 @@ const Timeline = ({
       >
         {moves && moves.map((move, index) => {
           const nextMove = moves[index + 1];
-          const moveEndTime = move.startTime + (move.waitTime || 0);
+          // const moveEndTime = move.startTime + (move.waitTime || 0);
           const nextMoveStartTime = nextMove ? nextMove.startTime : musicDuration;
 
           // Position and width for the segments
