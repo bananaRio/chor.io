@@ -289,7 +289,7 @@ function Overview() {
                   onClick={() => handleModify(index)}
                   className="btn btn-outline-secondary btn-sm"
                 >
-                  Modify
+                  <img src="/chor.io/images/pencil.png" alt="Modify" width="21px" height="21px" />
                 </button>
               </li>
             ))}
