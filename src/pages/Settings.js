@@ -64,101 +64,109 @@ function Settings() {
   };
 
   return (
-    <div className="container d-flex justify-content-center py-5">
-      <div className="w-100" style={{ maxWidth: 600 }}>
-        <div className="text-center mb-4">
-          <h2>Routine Settings</h2>
-        </div>
+    <div>
+      <div className="d-flex justify-content-between align-items-center bg-light p-3 sticky-top">
+        <h2 className="m-0">Routine Settings</h2>
+      </div>
 
-        <div className="form-group mb-3">
-          <label htmlFor="routineName">
-            Routine Name <span className="text-danger">*</span>
-          </label>
-          <input
-            id="routineName"
-            type="text"
-            className="form-control"
-            name="routineName"
-            value={routine.routineName}
-            onChange={handleChange}
-            placeholder="Enter a name for your routine, e.g. 'HipHop_1'"
-          />
-          <small className="form-text text-muted">
-            Please choose a unique name for your routine.
-          </small>
-        </div>
+      <div className="d-flex" style={{ height: "100vh", padding: "40px" }}>
+        <div className="w-100" style={{ maxWidth: 600 }}>
 
-        <div className="form-group mb-3">
-          <label htmlFor="fileUpload">Music/Video File</label>
-          <input
-            id="fileUpload"
-            type="file"
-            className="form-control"
-            accept="audio/*,video/*"
-            onChange={handleFileUpload}
-          />
-        </div>
-
-        {musicFile && (
-          <div className="form-group mb-3 text-center">
-            <p className="mb-2">Selected File:</p>
-            <audio controls src={musicFile} />
-          </div>
-        )}
-
-        <div className="form-group mb-3">
-          <label>Floor Dimensions (m)</label>
-          <div className="d-flex gap-2">
+          <div className="form-group mb-3">
+            <label htmlFor="routineName">
+              Routine Name
+            </label>
             <input
-              type="number"
+              id="routineName"
+              type="text"
               className="form-control"
-              style={{ flex: 1 }}
-              name="x"
-              value={routine.dimensions.x}
-              onChange={handleDimensionChange}
-              placeholder="Width"
+              name="routineName"
+              value={routine.routineName}
+              onChange={handleChange}
+              placeholder="Enter a name for your routine, e.g. 'HipHop_1'"
             />
+            <small className="form-text text-muted">
+              Please choose a unique name for your routine.
+            </small>
+          </div>
+
+          <div className="form-group mb-3">
+            <label htmlFor="fileUpload">Music/Video File</label>
             <input
-              type="number"
+              id="fileUpload"
+              type="file"
               className="form-control"
-              style={{ flex: 1 }}
-              name="y"
-              value={routine.dimensions.y}
-              onChange={handleDimensionChange}
-              placeholder="Height"
+              accept="audio/*,video/*"
+              onChange={handleFileUpload}
             />
           </div>
-        </div>
 
-        <div className="form-group mb-4">
-          <label htmlFor="defaultLength">
-            Default Routine Length (seconds)
-          </label>
-          <input
-            id="defaultLength"
-            type="number"
-            className="form-control"
-            value={defaultLength}
-            onChange={(e) => setDefaultLength(Number(e.target.value))}
-          />
-        </div>
+          {musicFile && (
+            <div className="form-group mb-3 text-center">
+              <p className="mb-2">Selected File:</p>
+              <audio controls src={musicFile} />
+            </div>
+          )}
 
-        <div className="d-flex justify-content-between">
-          <button
-            className="btn btn-secondary px-4"
-            onClick={handleBack}
-          >
-            Back
-          </button>
-          <button
-            className="btn btn-success px-4"
-            onClick={handleSaveAndProceed}
-          >
-            Save &amp; Proceed
-          </button>
+          <div className="form-group mb-3">
+            <label>Floor Dimensions (m)</label>
+            <p style={{ fontSize: "12px" }}>Height x Width</p>
+            <div className="d-flex gap-2">
+              <input
+                type="number"
+                className="form-control"
+                style={{ flex: 1 }}
+                name="x"
+                value={routine.dimensions.x}
+                onChange={handleDimensionChange}
+                placeholder="Width"
+              />
+              <input
+                type="number"
+                className="form-control"
+                style={{ flex: 1 }}
+                name="y"
+                value={routine.dimensions.y}
+                onChange={handleDimensionChange}
+                placeholder="Height"
+              />
+            </div>
+          </div>
+
+          <div className="form-group mb-4">
+            <label htmlFor="defaultLength">
+              Default Routine Length (seconds)
+            </label>
+            <input
+              id="defaultLength"
+              type="number"
+              className="form-control"
+              value={defaultLength}
+              onChange={(e) => setDefaultLength(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="d-flex justify-content-between">
+            <button
+              className="btn btn-secondary px-4"
+              onClick={handleBack}
+            >
+              Back
+            </button>
+            <button
+              className="btn btn-success px-4"
+              onClick={handleSaveAndProceed}
+            >
+              Save &amp; Proceed
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+
+
+
   );
 }
 

@@ -226,7 +226,7 @@ function Review() {
     <div style={{ display: "flex" }}>
 
 
-      <div style={{ flex: 1, padding: "20px" }}>
+      <div style={{ flex: 1, padding: "40px" }}>
         <div className="row">
           <div className="col">
             <h2>{jsonData.routineName}</h2>

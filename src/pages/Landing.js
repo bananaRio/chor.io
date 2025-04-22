@@ -35,7 +35,7 @@ function Landing() {
 
     const handleNew = () => {
         const empty_routine = {
-            routineName: " ",
+            routineName: "My Routine",
             music_source_path: "",
             dimensions: { x: 800, y: 400 },
             defaultLength: 100,
@@ -79,7 +79,7 @@ function Landing() {
     return (
         <div>
             <div className="d-flex justify-content-between align-items-center bg-light p-3 sticky-top">
-                <h2 className="m-0">Manage Routines</h2>
+                <h2 className="m-0">Manage Chor.io Routines</h2>
             </div>
 
             <div className="d-flex" style={{ height: "100vh" }}>

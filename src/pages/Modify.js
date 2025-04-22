@@ -160,33 +160,31 @@ function Modify() {
   if (id !== "new") savedMoves.splice(parseInt(id), 1);
 
   return (
-    <div className="container p-4">
-      <header className="d-flex justify-content-between align-items-center bg-light p-2 rounded">
-        <h4>Modify</h4>
-        <div style={{ background: "transparent" }}>
-          <button className="btn btn-secondary me-2" onClick={() => navigate("/chor.io/overview")}>
-            Discard Changes
-          </button>
+    <div style={{ flex: 1, padding: "40px" }}>
+      <div className="row">
+        <div className="col">
+          <h2>Modify</h2>
+        </div>
+        <button className="btn btn-secondary" onClick={() => navigate("/chor.io/overview")}>
+          Discard Changes
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={handleSave}
+          style={{ border: "none", cursor: "pointer" }}
+        >
+          Save
+        </button>
+        {id !== "new" && (
           <button
-            className="btn btn-primary me-2"
-            onClick={handleSave}
+            className="btn btn-danger"
+            onClick={handleDelete}
             style={{ border: "none", cursor: "pointer" }}
           >
-            Save
-            {/*<img src="/chor.io/images/check.png" alt="Save" style={{ width: "30px", height: "30px" }} /> // ???*/}
+            Delete
           </button>
-          {id !== "new" && (
-            <button
-              className="btn btn-danger me-2"
-              onClick={handleDelete}
-              style={{ border: "none", cursor: "pointer" }}
-            >
-              Delete
-              {/*<img src="/chor.io/images/trash.png" alt="Delete" style={{ width: "30px", height: "30px" }} />*/}
-            </button>
-          )}
-        </div>
-      </header>
+        )}
+      </div>
 
       <div className="row mt-4">
         <div className="col-md-6">
@@ -268,19 +266,18 @@ function Modify() {
         </div>
       </div>
 
-      {/* Timeline and its white box*/}
-      <div className="mt-4 p-3 bg-light rounded">
-        <h4>Time Selection</h4>
-        <Timeline
-          musicDuration={musicDuration}
-          currentTime={time}
-          moves={routineData?.moves || []}  // Pass just the moves array
-          currentEffectiveMove={currentMove}  // Pass the current move being edited
-          setCurrentTime={setTime}
-          setSelectedMoveIndex={() => { }}  // Empty function since we don't need move selection in modify mode
-          playerRef={playerRef}
-        />
-      </div>
+      <br />
+      <br />
+      <h4>Select Desired Time</h4>
+      <Timeline
+        musicDuration={musicDuration}
+        currentTime={time}
+        moves={routineData?.moves || []}  // Pass just the moves array
+        currentEffectiveMove={currentMove}  // Pass the current move being edited
+        setCurrentTime={setTime}
+        setSelectedMoveIndex={() => { }}  // Empty function since we don't need move selection in modify mode
+        playerRef={playerRef}
+      />
 
       {/* Audio */}
       {musicFile && (

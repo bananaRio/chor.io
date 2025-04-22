@@ -239,17 +239,17 @@ function Overview() {
   return (
     <div style={{ display: "flex" }}>
       {justSaved && (
-          <div
-            className="alert alert-success position-fixed"
-            style={{
-              bottom: '20px',
-              right: '20px',
-              margin: 0,
-              zIndex: 1050
-            }}
-          >
-            Changes saved!
-          </div>
+        <div
+          className="alert alert-success position-fixed"
+          style={{
+            bottom: '20px',
+            right: '20px',
+            margin: 0,
+            zIndex: 1050
+          }}
+        >
+          Changes saved!
+        </div>
       )}
       <div style={{ width: "300px", padding: "10px", borderRight: "1px solid #ccc", overflowY: "auto" }}>
         <div style={{ marginBottom: "20px" }}>
@@ -299,28 +299,29 @@ function Overview() {
         )}
       </div>
 
-      <div style={{ flex: 1, padding: "20px" }}>
+      <div style={{ flex: 1, padding: "40px" }}>
         <div className="row">
           <div className="col">
             <h2>{jsonData.routineName}</h2>
           </div>
+          <button className="btn btn-secondary" type="button" onClick={handleSettings}>
+            Settings
+          </button>
+          <button className="btn btn-secondary" type="button" onClick={handleBack}>
+            Load or Export File
+          </button>
           <button className="btn btn-primary" type="button" onClick={handleReview}>
             Review
           </button>
-          <button className="btn btn-secondary" type="button" onClick={handleBack}>
-            Landing Page
-          </button>
-          <button className="btn btn-primary" type="button" onClick={handleSettings}>
-            Settings
-          </button>
         </div>
 
+        <br />
         <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           <div style={{ flex: 2 }}>
             <h4>Position on Floor</h4>
             <div
               style={{
-                height: "400px", // ??? Alt is (jsonData.dimensions.y.toString()) + "px",
+                height: "400px", // ??? Alt is (jsonData.dimensions.y.toString()) + "px", or auto
                 background: "transparent",
                 display: "flex",
                 alignItems: "center",
@@ -359,8 +360,10 @@ function Overview() {
                   rows={3}
                 />
                 <button className="btn btn-success" onClick={handleSaveDescription}
-                  style={{backgroundColor: justSaved ? "green" : "blue", 
-                          borderColor: justSaved ? "green" : "blue"}}>
+                  style={{
+                    backgroundColor: justSaved ? "green" : "blue",
+                    borderColor: justSaved ? "green" : "blue"
+                  }}>
                   Save Changes
                 </button>
               </div>
