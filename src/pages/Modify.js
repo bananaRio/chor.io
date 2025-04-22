@@ -39,7 +39,6 @@ function Modify() {
     routineData.defaultLength
   );
   const playerRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   // sync and initialize on focus / id change
   useEffect(() => {
@@ -74,19 +73,6 @@ function Modify() {
       setMapOffset(nameInputRef.current.offsetTop);
     }
   }, []);
-
-  // audio time tracking
-  useEffect(() => {
-    let anim;
-    const step = () => {
-      if (playerRef.current && !playerRef.current.paused) {
-        setTime(playerRef.current.currentTime);
-        anim = requestAnimationFrame(step);
-      }
-    };
-    if (isPlaying) anim = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(anim);
-  }, [isPlaying]);
 
   // save move
   const handleSave = () => {
