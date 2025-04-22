@@ -12,8 +12,8 @@ function ChoreographyMap({
   connectorOffsets = [],
   stageWidth = 800,
   stageHeight = 400,
-  onConnectorOffsetsChange = () => { },
-  onMoveDoubleClick = () => { }
+  onConnectorOffsetsChange = () => {},
+  onMoveDoubleClick = () => {}
 }) {
   const [mapBackground] = useImage(floor_img);
 
@@ -21,6 +21,11 @@ function ChoreographyMap({
   const markers = editableMove && isEditable
     ? [...moveList, editableMove]
     : [...moveList];
+
+  // sort in TIME order in order to connect arrows correctlu
+  const sortedMarkers = markers
+    .slice()
+    .sort((a, b) => (a.startTime || 0) - (b.startTime || 0));
 
   // Ensure correct number of connector offsets
   useEffect(() => {
@@ -38,15 +43,18 @@ function ChoreographyMap({
 
   // Draw curved connectors
   const generateConnectors = () => {
-    if (markers.length < 2) return null;
-    return markers.slice(0, -1).map((marker, index) => {
-      const nextMarker = markers[index + 1];
+    if (sortedMarkers.length < 2) return null;
+    return sortedMarkers.slice(0, -1).map((marker, index) => {
+      const nextMarker = sortedMarkers[index + 1];
       const mid = {
         x: (getX(marker) + getX(nextMarker)) / 2,
         y: (getY(marker) + getY(nextMarker)) / 2
       };
       const offset = connectorOffsets[index] || { dx: 0, dy: 0 };
-      const controlPoint = { x: mid.x + offset.dx, y: mid.y + offset.dy };
+      const controlPoint = {
+        x: mid.x + offset.dx,
+        y: mid.y + offset.dy
+      };
       return (
         <Arrow
           key={`connector-${index}`}
@@ -56,7 +64,7 @@ function ChoreographyMap({
             controlPoint.x,
             controlPoint.y,
             getX(nextMarker),
-            getY(nextMarker)
+            getY(nextMarker),
           ]}
           tension={0.5}
           stroke={nextMarker.color || "black"}
@@ -129,7 +137,7 @@ function ChoreographyMap({
         {renderControlHotspots()}
 
         {/* Saved moves */}
-        {moveList.map((move, index) => (
+        {sortedMarkers.map((move, index) => (
           <React.Fragment key={`move-${index}`}>
             <Circle
               x={getX(move)}
