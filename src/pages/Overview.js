@@ -268,7 +268,6 @@ function Overview() {
               <li
                 key={index}
                 className="d-flex align-items-center p-2 mb-2 bg-light rounded border"
-                style={{ cursor: "pointer" }}
                 onDoubleClick={() => {
                   setSelectedMoveIndex(index);
                   setEditedDescription(move.description || "");
