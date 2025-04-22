@@ -220,6 +220,7 @@ function Modify() {
 
         {/* right: map */}
         <div className="col-md-6" style={{ marginTop: mapOffset }}>
+          <h5>Select Move Start Position</h5>
           <ChoreographyMap
             moveList={savedMoves()}
             editableMove={{ startTime: time, positions: position, color }}
