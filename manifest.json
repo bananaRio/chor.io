@@ -13,21 +13,6 @@
       "type": "image/png"
     },
     {
-      "src": "./images/gear.png",
-      "sizes": "700x700",
-      "type": "image/png"
-    },
-    {
-      "src": "./images/check.png",
-      "sizes": "700x700",
-      "type": "image/png"
-    },
-    {
-      "src": "./images/trash.png",
-      "sizes": "700x700",
-      "type": "image/png"
-    },
-    {
       "src": "./images/pause.png",
       "sizes": "700x700",
       "type": "image/png"
