@@ -15,7 +15,7 @@ function Review() {
   const lastMoveRef = useRef(null);
 
   const [musicFile, setMusicFile] = useState(null);
-  const [musicDuration, setMusicDuration] = useState(180);
+  const [musicDuration, setMusicDuration] = useState(jsonData.defaultLength);
 
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -203,7 +203,7 @@ function Review() {
 
   useEffect(() => {
     let intervalId;
-    if (isPlaybackActive && !musicFile) {
+    if (isPlaybackActive) {
       intervalId = setInterval(() => {
         setCurrentTime((prevTime) => {
           const newTime = prevTime + 0.1; // increase by 0.1 sec every 100ms
@@ -220,7 +220,7 @@ function Review() {
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isPlaybackActive, musicFile, musicDuration]);
+  }, [isPlaybackActive, musicDuration]);
 
   return (
     <div style={{ display: "flex" }}>
